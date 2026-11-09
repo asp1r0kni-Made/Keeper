@@ -153,7 +153,8 @@ key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>',
 help:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01"/>'
 };
 const ic=(n,s)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"${s?` width="${s}" height="${s}"`:''}>${P[n]||''}</svg>`;
-const aicon=(a,s=56)=>`<div class="ai" style="width:${s}px;height:${s}px;background:${esc(a.color)};font-size:${Math.round(s*.46)}px">${esc(a.icon||a.symbol[0])}</div>`;
+const ICONS={GRAM:'icons/gram.png',USDT:'icons/usdt.png'};
+const aicon=(a,s=56)=>ICONS[a.symbol]?`<div class="ai" style="width:${s}px;height:${s}px"><img src="${ICONS[a.symbol]}" width="${s}" height="${s}" style="display:block;width:100%;height:100%;object-fit:cover" alt="${esc(a.symbol)}"></div>`:`<div class="ai" style="width:${s}px;height:${s}px;background:${esc(a.color)};font-size:${Math.round(s*.46)}px">${esc(a.icon||a.symbol[0])}</div>`;
 
 /* ====================== состояние / API ====================== */
 let SERVER='',INFO={},TOKEN=null,LOCKED=false,HID_AT=0;
