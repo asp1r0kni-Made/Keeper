@@ -59,7 +59,15 @@ android {
     }
 }
 
+configurations.all {
+    // фикс Duplicate class kotlin.*: jdk7/jdk8 уже внутри kotlin-stdlib 1.8+
+    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
+    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+}
+
 dependencies {
+    // фикс Duplicate class kotlin.* (stdlib 1.8.x vs jdk7/jdk8 1.6.x)
+    implementation platform('org.jetbrains.kotlin:kotlin-bom:1.8.22')
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'androidx.biometric:biometric:1.1.0'
     implementation 'androidx.webkit:webkit:1.11.0'
