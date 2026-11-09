@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Keeper</title>
+<style>
+:root{--bg:#10151f;--card:#1c2431;--card2:#252f40;--tx:#fff;--mut:#8b95a7;--bl:#3b8cf5;--gr:#3ecf8e;--rd:#ff5a73;--r:22px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden;-webkit-user-select:none;user-select:none}
+button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer}
+input,textarea{font:inherit;color:inherit;-webkit-user-select:text;user-select:text}
+[hidden]{display:none!important}
+#app{height:100dvh;display:flex;flex-direction:column}
+.content{flex:1;overflow-y:auto;padding:14px 16px 24px;animation:fade .25s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.top{display:flex;align-items:center;gap:10px}.sp{flex:1}
+.rb{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#c9d2e0;position:relative;flex:none}
+.rb.ph{visibility:hidden}.rb svg{width:26px;height:26px}
+.dot{position:absolute;top:6px;right:6px;width:9px;height:9px;border-radius:50%;background:var(--rd)}
+.pillb{display:flex;align-items:center;gap:8px;background:var(--card);padding:10px 16px;border-radius:30px;font-weight:600;font-size:17px;margin:0 auto 0 0}
+.top .pillb{margin:0 auto}
+.bal{text-align:center;font-size:54px;font-weight:700;margin:34px 0 4px;letter-spacing:-1px}
+.addr{text-align:center;color:var(--mut);font-size:15px;display:flex;justify-content:center;gap:8px;align-items:center}
+.tag{background:rgba(62,207,142,.15);color:var(--gr);padding:2px 8px;border-radius:8px;font-size:12px;font-weight:700}
+.acts{display:flex;justify-content:space-around;margin:26px 0 20px}
+.act{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--mut);font-size:13px;width:80px}
+.act i{width:60px;height:60px;border-radius:50%;background:var(--card);display:grid;place-items:center;color:#fff;transition:transform .12s}
+.act:active i{transform:scale(.9)}.act svg{width:28px;height:28px}
+.banner{position:relative;background:linear-gradient(120deg,#1a2a4a,#1c2431);border:1px solid #2a3547;border-radius:var(--r);padding:18px;margin-bottom:18px}
+.banner b{display:block;font-size:19px;max-width:80%}.banner span{color:var(--mut);display:block;margin-top:8px}
+.banner .x{position:absolute;right:10px;top:10px;width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.35);display:grid;place-items:center}
+h3{font-size:22px;margin:22px 0 12px}
+.card{background:var(--card);border-radius:var(--r);padding:6px 16px}
+.item{display:flex;align-items:center;gap:14px;padding:14px 0}
+.item+.item{border-top:1px solid #263043}
+.item .t{flex:1;min-width:0}.item .t b{display:block;font-size:17px}.item .t small{color:var(--mut)}
+.item .r{text-align:right}.item .r small{color:var(--mut);display:block}
+.ai{border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;flex:none;overflow:hidden}
+.setup{display:flex;gap:14px;align-items:center;background:var(--card);border-radius:var(--r);padding:18px;margin-bottom:12px}
+.setup .ic{width:56px;height:56px;border-radius:50%;background:#3a3326;color:#f5a623;display:grid;place-items:center;flex:none}
+.setup b{display:block;font-size:17px}.setup small{color:var(--mut)}
+.search{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:20px;padding:14px 16px;color:var(--mut)}
+.search input{flex:1;background:none;border:0;outline:0;font-size:17px;min-width:0}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 6px;background:var(--card);border-radius:28px;padding:18px 8px}
+.cell{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:14px;min-width:0}
+.cell b{font-size:15px;max-width:100%;overflow:hidden;text-overflow:ellipsis}.up{color:var(--gr)}.dn{color:var(--rd)}
+.tabbar{display:flex;background:#0e131c;border-top:1px solid #1a2230;padding:6px 0 8px}
+.tb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--mut);font-size:14px;font-weight:600;padding:6px 0}
+.tb svg{width:30px;height:30px}.tb.on{color:var(--bl)}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;opacity:0;transition:opacity .2s;z-index:20}
+.ov.in{opacity:1}.ov.under{visibility:hidden}
+.sh{width:100%;max-height:95dvh;overflow-y:auto;background:var(--bg);border-radius:28px 28px 0 0;padding:14px 16px 20px;transform:translateY(40px);transition:transform .22s cubic-bezier(.2,.8,.2,1)}
+.ov.in .sh{transform:none}
+.hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.hd h2{margin:0;font-size:25px;text-align:center;flex:1}.hd .rb{background:var(--card)}
+.opt{display:flex;gap:16px;align-items:center;background:var(--card);border-radius:var(--r);padding:20px 16px;margin-bottom:12px;width:100%;text-align:left}
+.opt .ic{width:60px;height:60px;border-radius:50%;background:#1f3454;color:var(--bl);display:grid;place-items:center;flex:none}
+.opt .ic svg{width:30px;height:30px}.opt b{display:block;font-size:20px}.opt small{color:var(--mut);font-size:17px}
+.box{background:var(--card);border-radius:var(--r);padding:16px;margin-bottom:12px;border:2px solid transparent}
+.box.focus{border-color:var(--bl)}
+.bl{display:flex;justify-content:space-between;color:var(--mut);font-size:17px}.bl a{color:var(--bl);font-weight:600;margin-left:8px}
+.br{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}
+.br input,.big{background:none;border:0;outline:0;font-size:38px;font-weight:600;width:100%;min-width:0;color:#fff}
+.big{color:var(--mut)}
+.chip{display:flex;align-items:center;gap:8px;background:var(--card2);padding:9px 12px;border-radius:30px;font-weight:700;font-size:20px;flex:none}
+.chip svg{width:16px;height:16px;color:var(--mut)}
+.flip{width:48px;height:48px;border-radius:50%;background:var(--card2);display:grid;place-items:center;margin:-30px auto -18px;position:relative;z-index:2;border:4px solid var(--bg)}
+.flip svg{width:24px;height:24px}
+.note{color:var(--mut);text-align:center;font-size:15px;margin:10px 0}
+.cta{width:100%;background:var(--bl);color:#fff;font-size:20px;font-weight:600;border-radius:30px;padding:17px;margin-top:8px;transition:opacity .15s}
+.cta:disabled{opacity:.45}.cta.red{background:#3a2330;color:var(--rd)}.cta.sec{background:var(--card2)}
+.field{background:var(--card);border-radius:var(--r);padding:12px 16px;margin-bottom:12px;border:2px solid transparent;display:flex;align-items:center;gap:8px}
+.field:focus-within{border-color:var(--bl)}.field label{color:var(--mut);font-size:15px;display:block}
+.field>div{flex:1;min-width:0}.field input{width:100%;background:none;border:0;outline:0;font-size:19px;padding:2px 0}
+.mini{background:var(--card2);padding:10px 18px;border-radius:24px;font-weight:600;font-size:18px;flex:none}
+.pool{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:var(--r);padding:14px 16px;margin:12px 0}
+.seg{display:flex;background:var(--card);border-radius:24px;padding:4px;margin-bottom:12px}
+.seg button{flex:1;padding:10px;border-radius:20px;color:var(--mut);font-weight:600}.seg .on{background:var(--card2);color:#fff}
+.qr{background:#fff;border-radius:22px;padding:16px;width:240px;height:240px;margin:12px auto}.qr svg{width:100%;height:100%;display:block}
+.mono{font-family:ui-monospace,Menlo,monospace;word-break:break-all;background:var(--card);padding:14px;border-radius:18px;text-align:center;-webkit-user-select:text;user-select:text}
+.row{display:flex;align-items:center;gap:14px;padding:16px 0;width:100%;text-align:left}.row+.row{border-top:1px solid #263043}
+.row .t{flex:1}.row small{color:var(--mut);display:block}.row svg{width:24px;height:24px;color:var(--mut)}
+.sw{width:50px;height:30px;border-radius:15px;background:#2b3648;position:relative;flex:none;transition:.2s}.sw::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s}
+.sw.on{background:var(--bl)}.sw.on::after{left:23px}
+.bar{height:8px;border-radius:4px;background:var(--card2);overflow:hidden;margin:14px 0}.bar i{display:block;height:100%;width:0;background:var(--bl);transition:width .2s}
+.badge{font-size:12px;padding:2px 8px;border-radius:8px;background:rgba(245,166,35,.15);color:#f5a623;margin-left:6px}
+.center{text-align:center;color:var(--mut);padding:40px 10px}
+#pin{position:fixed;inset:0;background:var(--bg);z-index:50;display:flex;flex-direction:column;align-items:center;padding:30px 20px 20px}
+.pill{background:#2b3648;padding:18px 40px;border-radius:40px;font-size:21px;margin-bottom:12vh}
+.pt{font-size:27px;font-weight:700;margin-top:4vh}.ps{color:var(--mut);height:22px;margin-top:8px}
+.dots{display:flex;gap:26px;margin:28px 0 auto}.dots i{width:22px;height:22px;border-radius:50%;background:#1f2838;transition:.15s}.dots i.on{background:var(--bl);transform:scale(1.1)}
+.shake{animation:sh .35s}@keyframes sh{20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);width:100%;max-width:380px;gap:4px;margin-bottom:10px}
+.pad b{display:grid;place-items:center;height:78px;font-size:38px;font-weight:600;border-radius:20px}.pad b:active{background:#1a2230}.pad b.ph{visibility:hidden}.pad svg{width:34px;height:34px;color:var(--bl)}
+.pad b[data-k=del] svg{color:#aab4c5}
+.cancel{color:var(--bl);font-size:19px;padding:12px}
+.auth{height:100dvh;overflow-y:auto;padding:36px 22px;display:flex;flex-direction:column;align-items:center}
+.auth img{width:96px;height:96px;border-radius:26px;margin-top:4vh}.auth h1{font-size:34px;margin:14px 0 4px}.auth p{color:var(--mut);margin:0 0 22px;text-align:center}
+.auth form{width:100%;max-width:420px}.err{color:var(--rd);text-align:center;min-height:22px;margin:4px 0}
+.link{color:var(--bl);text-align:center;display:block;margin:18px auto;font-weight:600}
+#toast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,20px);background:#2b3648;padding:12px 20px;border-radius:24px;opacity:0;pointer-events:none;transition:.25s;z-index:99;max-width:86%;text-align:center}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+.spin{width:22px;height:22px;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:rot .7s linear infinite;display:inline-block;vertical-align:middle}@keyframes rot{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="sheets"></div>
+<div id="pin" hidden></div>
+<div id="toast"></div>
+<script>
+'use strict';
+/* ====================== мост к Android (в браузере — заглушка для отладки) ====================== */
+const A = window.Android || {
+  info:()=>JSON.stringify({serverUrl:localStorage.server||location.origin,versionCode:0,versionName:'web'}),
+  get:k=>localStorage.getItem('kv_'+k),set:(k,v)=>k==='server'?localStorage.server=v:localStorage.setItem('kv_'+k,v),del:k=>localStorage.removeItem('kv_'+k),
+  bioAvailable:()=>false,bio:(id)=>setTimeout(()=>window.__bio(id,false)),qr:()=>'',copy:t=>navigator.clipboard&&navigator.clipboard.writeText(t),
+  paste:()=>'',share:()=>{},openUrl:u=>window.open(u),toast:()=>{},vibrate:()=>{},update:()=>{}
+};
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num=(n,d=6)=>Number(n||0).toLocaleString('ru-RU',{maximumFractionDigits:d});
+const usd=n=>{n=Number(n||0);return n>=1?num(n,2):n>=0.01?num(n,4):num(n,7)};
+const pa=v=>parseFloat(String(v).replace(',','.'))||0;
+const fin=n=>String(Math.floor(n*1e6+1e-7)/1e6);
+const short=a=>a?a.slice(0,4)+'…'+a.slice(-4):'';
+const kv={get:k=>A.get(k),set:(k,v)=>A.set(k,String(v)),del:k=>A.del(k)};
+let toastT;const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2400)};
+
+/* ====================== иконки ====================== */
+const P={
+scan:'<path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M7 12h10"/>',
+clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+up:'<path d="M12 19V5M5 12l7-7 7 7"/>',down:'<path d="M12 5v14M19 12l-7 7-7-7"/>',
+swap:'<path d="M7 4v14M3 14l4 4 4-4M17 20V6M13 10l4-4 4 4"/>',
+stake:'<path d="M4 19h16M6 15l4-4 3 3 6-7M15 7h4v4"/>',
+wallet:'<path d="M3 7a2 2 0 0 1 2-2h13v4"/><path d="M3 7v11a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1V10a1 1 0 0 0-1-1H5a2 2 0 0 1-2-2z"/><circle cx="16.5" cy="14.5" r="1.2" fill="currentColor"/>',
+chart:'<path d="M3 17l6-6 4 4 8-8M15 7h6v6"/><path d="M4 21h4v-4M10 21h4v-3"/>',
+compass:'<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>',
+x:'<path d="M6 6l12 12M18 6L6 18"/>',back:'<path d="M15 5l-7 7 7 7"/>',chev:'<path d="M6 9l6 6 6-6"/>',
+upd:'<path d="M8 9l4-4 4 4M8 15l4 4 4-4"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
+info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
+fp:'<path d="M12 11v3c0 3-1 5-2 6M8 14c0-2.2 1.8-4 4-4s4 1.8 4 4c0 2-.5 4-1.5 6M5 14c0-3.9 3.1-7 7-7s7 3.1 7 7c0 1.5-.2 3-.7 4.5M7 4.5A9 9 0 0 1 12 3c5 0 9 4 9 9"/>',
+del:'<path d="M21 5H9l-6 7 6 7h12z"/><path d="M13 9l4 6M17 9l-4 6"/>',
+copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/>',
+book:'<rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M7 19c1-3 3-4 5-4s4 1 5 4"/>',
+card:'<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/>',
+qr:'<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><path d="M14 14h3v3h-3zM20 14v6h-3"/>',
+logout:'<path d="M9 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h4M16 8l4 4-4 4M20 12H9"/>',
+key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>',
+help:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01"/>'
+};
+const ic=(n,s)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"${s?` width="${s}" height="${s}"`:''}>${P[n]||''}</svg>`;
+const aicon=(a,s=56)=>`<div class="ai" style="width:${s}px;height:${s}px;background:${esc(a.color)};font-size:${Math.round(s*.46)}px">${esc(a.icon||a.symbol[0])}</div>`;
+
+/* ====================== состояние / API ====================== */
+let SERVER='',INFO={},TOKEN=null,LOCKED=false,HID_AT=0;
+const S={tab:'wallet',data:null,q:'',bannerOff:false,upd:null,updShown:false};
+async function api(p,body){
+  let r;
+  try{r=await fetch(SERVER+p,{method:body===undefined?'GET':'POST',headers:{'Content-Type':'application/json',...(TOKEN?{Authorization:'Bearer '+TOKEN}:{})},body:body===undefined?undefined:JSON.stringify(body)})}
+  catch(e){throw new Error('Нет соединения с сервером')}
+  let j={};try{j=await r.json()}catch(e){}
+  if(r.status===401&&TOKEN){logout('Сессия истекла — войди снова');throw new Error('Требуется вход')}
+  if(!r.ok)throw new Error(j.error||'Ошибка сервера ('+r.status+')');
+  return j;
+}
+const asset=s=>S.data.assets.find(a=>a.symbol===s)||{symbol:s,name:s,price:0,change:0,color:'#444',icon:''};
+const balOf=s=>(S.data.balances[s]||0);
+const stakeTot=()=>S.data.stake.amount+S.data.stake.reward;
+const totalUsd=()=>Object.entries(S.data.balances).reduce((t,[s,v])=>t+v*asset(s).price,0)+stakeTot()*asset('GRAM').price;
+async function refresh(){try{S.data=await api('/api/state');return true}catch(e){return false}}
+
+/* ====================== PIN / биометрия ====================== */
+const bioCb={};window.__bio=(id,ok)=>{const f=bioCb[id];if(f){delete bioCb[id];f(ok)}};
+const bioAuth=t=>new Promise(res=>{const id=Math.random().toString(36).slice(2);bioCb[id]=res;A.bio(id,t||'Keeper')});
+async function hashPin(p,salt){const b=new TextEncoder().encode((salt||kv.get('salt'))+':'+p);const h=await crypto.subtle.digest('SHA-256',b);return[...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+function pinUI(o){
+  const L=$('#pin');L.hidden=false;let v='';
+  L.innerHTML=`${o.pill?`<div class="pill">${o.pill}</div>`:''}<div class="pt">${o.title}</div><div class="ps" id="ps">${o.sub||''}</div><div class="dots">${'<i></i>'.repeat(4)}</div>
+  <div class="pad">${[1,2,3,4,5,6,7,8,9].map(n=>`<b data-k="${n}">${n}</b>`).join('')}<b data-k="bio" class="${o.bio?'':'ph'}">${o.bio?ic('fp'):''}</b><b data-k="0">0</b><b data-k="del">${ic('del')}</b></div>
+  ${o.cancel?'<button class="cancel" data-k="cancel">Отмена</button>':''}`;
+  const dots=[...L.querySelectorAll('.dots i')];
+  const paint=()=>dots.forEach((d,i)=>d.classList.toggle('on',i<v.length));
+  const ui={
+    title:t=>{$('.pt',L).textContent=t},sub:t=>{$('#ps').textContent=t||''},reset(){v='';paint()},
+    shake(msg){const d=$('.dots',L);d.classList.add('shake');A.vibrate();setTimeout(()=>{d.classList.remove('shake');ui.reset();if(msg)ui.sub(msg)},350)},
+    close(){L.hidden=true;L.innerHTML=''}
+  };
+  L.onclick=e=>{const k=e.target.closest('[data-k]');if(!k)return;const c=k.dataset.k;
+    if(c==='del'){v=v.slice(0,-1);paint()}
+    else if(c==='bio'){o.onBio&&o.onBio(ui)}
+    else if(c==='cancel'){ui.close();o.onCancel&&o.onCancel()}
+    else if(v.length<4){v+=c;paint();if(v.length===4){const p=v;setTimeout(()=>o.onDone(p,ui),110)}}};
+  return ui;
+}
+function lock(done){
+  LOCKED=true;const bioOn=kv.get('bio')==='1'&&A.bioAvailable();
+  const ok=ui=>{kv.set('fails',0);ui.close();LOCKED=false;done&&done()};
+  const ui=pinUI({title:'Введите пин-код',pill:'Требуется авторизация',bio:bioOn,
+    onBio:()=>bioAuth('Вход в Keeper').then(r=>r&&ok(ui)),
+    onDone:async(p,ui)=>{
+      if(await hashPin(p)===kv.get('pin'))return ok(ui);
+      const f=(+kv.get('fails')||0)+1;kv.set('fails',f);
+      if(f>=5){ui.close();LOCKED=false;return logout('Слишком много неверных ПИН-кодов — войди по паролю')}
+      ui.shake('Неверный ПИН-код. Осталось попыток: '+(5-f));
+    }});
+  if(bioOn)setTimeout(()=>bioAuth('Вход в Keeper').then(r=>r&&ok(ui)),350);
+}
+function setupPin(next,cancelable){
+  let first=null;
+  pinUI({title:'Придумайте ПИН-код',sub:'4 цифры для входа в Keeper',cancel:cancelable,
+    onDone:async(p,ui)=>{
+      if(!first){first=p;ui.reset();ui.title('Повторите ПИН-код');ui.sub('')}
+      else if(first===p){
+        const salt=[...crypto.getRandomValues(new Uint8Array(12))].map(x=>x.toString(16).padStart(2,'0')).join('');
+        kv.set('salt',salt);kv.set('pin',await hashPin(p,salt));kv.set('fails',0);ui.close();next&&next();
+      }else{first=null;ui.title('Придумайте ПИН-код');ui.shake('ПИН-коды не совпали, попробуй ещё раз')}
+    }});
+}
+function changePin(){
+  pinUI({title:'Текущий ПИН-код',cancel:true,onDone:async(p,ui)=>{
+    if(await hashPin(p)===kv.get('pin')){ui.close();setupPin(()=>toast('ПИН-код изменён'),true)}else ui.shake('Неверный ПИН-код')}});
+}
+function askBio(next){
+  if(!A.bioAvailable()||kv.get('bio')==='1')return next&&next();
+  openSheet(o=>`<div class="center" style="padding-top:20px"><div style="color:var(--bl)">${ic('fp',72)}</div><h2 style="color:#fff;margin:14px 0 8px">Вход по биометрии</h2>
+  <p style="margin:0 0 20px">Входите в Keeper по отпечатку или лицу вместо ПИН-кода.</p></div>
+  <button class="cta" data-a="bioyes">Включить</button><button class="cta sec" data-a="bioskip">Не сейчас</button>`,null,{next,lock:true});
+}
+
+/* ====================== шторки ====================== */
+const sheets=[];
+function openSheet(render,mount,st={}){
+  const o={render,mount,st},ov=document.createElement('div');ov.className='ov';ov.innerHTML='<div class="sh"></div>';
+  $('#sheets').appendChild(ov);o.ov=ov;o.sh=ov.firstChild;
+  ov.addEventListener('click',e=>{if(e.target===ov&&!o.st.lock)popSheet()});
+  const prev=sheets[sheets.length-1];if(prev)prev.ov.classList.add('under');
+  sheets.push(o);paint(o);requestAnimationFrame(()=>ov.classList.add('in'));return o;
+}
+function paint(o){o.sh.innerHTML=o.render(o);o.mount&&o.mount(o.sh,o)}
+function popSheet(){const o=sheets.pop();if(!o)return;o.ov.classList.remove('in');setTimeout(()=>o.ov.remove(),220);const n=sheets[sheets.length-1];if(n)n.ov.classList.remove('under')}
+function closeAll(){while(sheets.length)popSheet()}
+const hd=(t,o={})=>`<div class="hd">${o.back?`<button class="rb" data-a="back">${ic('back')}</button>`:o.info?`<button class="rb" data-a="${o.info}">${ic('info')}</button>`:'<span class="rb ph"></span>'}<h2>${t}</h2>${o.noclose?'<span class="rb ph"></span>':`<button class="rb" data-a="closeall">${ic('x')}</button>`}</div>`;
+const opt=(i,t,s,a,x='')=>`<button class="opt" data-a="${a}" ${x}><div class="ic">${ic(i)}</div><div><b>${t}</b><small>${s}</small></div></button>`;
+
+function pickAsset(title,onPick,filter){
+  const list=S.data.assets.filter(a=>!filter||filter(a));
+  openSheet(o=>hd(title,{back:1})+`<div class="card">${list.map(a=>`<button class="item" style="width:100%;text-align:left" data-a="pk" data-s="${esc(a.symbol)}">${aicon(a,44)}<div class="t"><b>${esc(a.symbol)}</b><small>${esc(a.name)}</small></div><div class="r"><b>${num(balOf(a.symbol))}</b><small>$${usd(balOf(a.symbol)*a.price)}</small></div></button>`).join('')}</div>`,null,{onPick});
+}
+function sendMenu(){openSheet(()=>hd('Вывести')+opt('up','Отправить токены','На другой кошелёк','m_send')+opt('card','Продать на карту','Или другими способами — через поддержку','m_sell')+opt('swap','Обменивайте USDT на другие токены','Мгновенно внутри Keeper','m_usdt'))}
+function depositMenu(){openSheet(()=>hd('Пополнить')+opt('qr','Получить токены','Из другого кошелька — по адресу и QR','d_recv')+opt('card','Купить картой или P2P','Пополнение через поддержку','d_buy')+opt('swap','Купить GRAM за другой токен','Обмен USDT и других активов','d_swap')+opt('down','Перевести стейблкоин','Отправьте USDT на свой адрес','d_usdt'))}
+function receiveSheet(sym){
+  const addr=S.data.user.address,svg=A.qr(addr);
+  openSheet(()=>hd('Получить '+(sym||''),{back:sheets.length>0})+(svg?`<div class="qr">${svg}</div>`:'')+`<p class="note">Отправляйте на этот адрес только токены Keeper (GRAM, USDT)</p><div class="mono">${esc(addr)}</div>
+  <div style="display:flex;gap:10px;margin-top:12px"><button class="cta" data-a="copyaddr">Копировать</button><button class="cta sec" data-a="shareaddr">Поделиться</button></div>`);
+}
+function sendForm(sym){
+  openSheet(o=>{const s=o.st,a=asset(s.sym);return hd('Отправить '+esc(s.sym),{back:1})+
+  `<div class="field"><div><label>Адрес</label><input id="sto" placeholder="UQ…" value="${esc(s.to)}" autocomplete="off" autocapitalize="off" spellcheck="false"></div><button class="mini" data-a="spaste">Вставить</button></div>
+  <div class="box"><div class="br" style="margin:0"><span style="color:var(--mut);font-size:19px">Сумма</span><input id="sam" inputmode="decimal" placeholder="0" value="${esc(s.amt)}" style="font-size:28px;text-align:right" autocomplete="off"><button class="chip" data-a="spsym">${aicon(a,24)}${esc(s.sym)}${ic('upd')}</button></div></div>
+  <div class="bl" style="margin:0 6px 12px"><span id="sus">$0 · Останется: ${num(balOf(s.sym))} ${esc(s.sym)}</span><a data-a="smax">МАКС</a></div>
+  <div class="field"><div><label>Комментарий</label><input id="scm" maxlength="120" value="${esc(s.cm)}" autocomplete="off"></div></div>
+  <p class="note">Адреса Keeper — мгновенно. Внешние адреса обрабатываются администратором.</p><button class="cta" id="sgo" data-a="sgo">Продолжить</button>`},
+  (sh,o)=>{const s=o.st;const up=()=>{const a=pa(s.amt),b=balOf(s.sym),ok=a>0&&a<=b+1e-9&&s.to.trim().length>=20;
+      $('#sus',sh).textContent='$'+usd(a*asset(s.sym).price)+' · Останется: '+num(Math.max(b-a,0))+' '+s.sym;$('#sgo',sh).disabled=!ok};
+    $('#sto',sh).oninput=e=>{s.to=e.target.value;up()};$('#sam',sh).oninput=e=>{s.amt=e.target.value;up()};$('#scm',sh).oninput=e=>{s.cm=e.target.value};up()},{sym,to:'',amt:'',cm:''});
+}
+function confirmSheet(title,rows,okText,fn){
+  openSheet(()=>hd(title,{back:1})+`<div class="card">${rows.map(r=>`<div class="item"><div class="t" style="color:var(--mut)">${r[0]}</div><div class="r" style="max-width:62%;word-break:break-all"><b style="font-size:16px">${esc(r[1])}</b></div></div>`).join('')}</div>
+  <button class="cta" id="cok" data-a="cok">${okText}</button>`,null,{fn});
+}
+function quote(o){const s=o.st,fa=asset(s.from),ta=asset(s.to),fee=+S.data.cfg.swap_fee||0,a=pa(s.amt),out=a?a*fa.price/ta.price*(1-fee/100):0;
+  $('#so',o.sh).textContent=out?num(out):'0';const ok=a>0&&a<=balOf(s.from)+1e-9;$('#sgo',o.sh).disabled=!ok;
+  $('#sq',o.sh).textContent=a>balOf(s.from)+1e-9?'Недостаточно средств':'1 '+s.from+' ≈ '+num(fa.price/ta.price,6)+' '+s.to}
+function swapSheet(from='GRAM',to='USDT'){
+  openSheet(o=>{const s=o.st,fa=asset(s.from),ta=asset(s.to);return hd('Обменять')+
+  `<div class="box focus"><div class="bl"><span>Отправить</span><span>Баланс: ${num(balOf(s.from))}<a data-a="swmax">МАКС</a></span></div><div class="br"><input id="sa" inputmode="decimal" placeholder="0" value="${esc(s.amt)}" autocomplete="off"><button class="chip" data-a="swpick" data-w="from">${aicon(fa,26)}${esc(s.from)}${ic('upd')}</button></div></div>
+  <button class="flip" data-a="swflip">${ic('swap')}</button>
+  <div class="box"><div class="bl"><span>Получить</span></div><div class="br"><div class="big" id="so">0</div><button class="chip" data-a="swpick" data-w="to">${aicon(ta,26)}${esc(s.to)}${ic('upd')}</button></div></div>
+  <p class="note" id="sq"></p><p class="note">Сервис предоставлен Keeper Swap · комиссия ${num(S.data.cfg.swap_fee,2)}%</p><button class="cta" id="sgo" data-a="swgo">Продолжить</button>`},
+  (sh,o)=>{const i=$('#sa',sh);i.oninput=()=>{o.st.amt=i.value;quote(o)};quote(o)},{from,to,amt:''});
+}
+function stakeSheet(){
+  openSheet(o=>{const s=o.st,st=S.data.stake,un=s.mode==='unstake',max=un?stakeTot():balOf('GRAM'),g=asset('GRAM');return hd(un?'Вывести из стейкинга':'Застейкать',{info:'stinfo'})+
+  `<div class="seg"><button class="${un?'':'on'}" data-a="stmode" data-m="stake">Застейкать</button><button class="${un?'on':''}" data-a="stmode" data-m="unstake">Вывести</button></div>
+  <div class="box" style="text-align:center;padding:34px 10px"><div class="br" style="justify-content:center"><input id="sta" inputmode="decimal" placeholder="0" value="${esc(s.amt)}" style="text-align:right;width:46%;font-size:46px"><b style="font-size:46px;color:var(--mut)">GRAM</b></div>
+  <div class="mini" id="stu" style="display:inline-block;margin-top:14px;color:var(--mut)">0 USD</div></div>
+  <div class="bl" style="margin:0 4px 10px"><button class="mini" data-a="stmax" style="color:#fff">МАКС</button><span style="align-self:center">${un?'В стейкинге':'Доступно'}: ${num(max)} GRAM</span></div>
+  <div class="pool"><div class="ai" style="width:54px;height:54px;background:#dff6ff;color:#000;font-size:26px">◉</div><div class="t" style="flex:1"><b style="font-size:20px">${esc(st.pool)}</b><br><small style="color:var(--mut);font-size:16px">APY ~ ${num(st.apy,2)}%</small></div></div>
+  ${st.amount>0?`<p class="note">В стейкинге: ${num(st.amount)} GRAM · награда: +${num(st.reward,6)} GRAM</p>`:''}
+  <button class="cta" id="sgo" data-a="stgo">Продолжить</button>`},
+  (sh,o)=>{const i=$('#sta',sh),s=o.st,up=()=>{const a=pa(s.amt),max=s.mode==='unstake'?stakeTot():balOf('GRAM');$('#stu',sh).textContent=usd(a*asset('GRAM').price)+' USD';$('#sgo',sh).disabled=!(a>0&&a<=max+1e-9)};i.oninput=()=>{s.amt=i.value;up()};up()},{mode:'stake',amt:''});
+}
+function assetSheet(sym){
+  const a=asset(sym),b=balOf(sym);
+  openSheet(()=>hd(esc(a.symbol))+`<div style="text-align:center">${aicon(a,72)}<div style="font-size:40px;font-weight:700;margin-top:10px">$${usd(a.price)}</div><div class="${a.change>=0?'up':'dn'}" style="font-size:19px">${a.change>=0?'+':'−'} ${num(Math.abs(a.change),2)}%</div><div style="color:var(--mut);margin:6px 0 18px">${esc(a.name)}</div></div>
+  <div class="card"><div class="item"><div class="t"><b>Ваш баланс</b></div><div class="r"><b>${num(b)} ${esc(a.symbol)}</b><small>$${usd(b*a.price)}</small></div></div></div>
+  <div style="display:flex;gap:10px;margin-top:14px"><button class="cta" data-a="abuy" data-s="${esc(sym)}">Купить</button><button class="cta sec" data-a="asell" data-s="${esc(sym)}">Продать</button></div>`);
+}
+const TT={send:'Отправлено',receive:'Получено',withdraw:'Вывод',swap:'Обмен',stake:'Стейкинг',unstake:'Вывод из стейкинга',admin_credit:'Пополнение',admin_debit:'Списание'};
+const PLUS={receive:1,admin_credit:1,unstake:1};
+async function historySheet(){
+  const o=openSheet(o=>hd('История')+(o.st.items?(o.st.items.length?`<div class="card">${o.st.items.map(t=>{const sw=t.type==='swap',pl=PLUS[t.type];const am=sw?`<b>+${num(t.amount2)} ${esc(t.symbol2)}</b><small>−${num(t.amount)} ${esc(t.symbol)}</small>`:`<b class="${pl?'up':''}">${pl?'+':'−'}${num(t.amount)} ${esc(t.symbol)}</b>`;
+  const stt=t.status==='pending'?'<span class="badge">В обработке</span>':t.status==='rejected'?'<span class="badge" style="background:rgba(255,90,115,.15);color:var(--rd)">Отклонено, возвращено</span>':'';
+  return `<div class="item">${aicon(asset(t.symbol),44)}<div class="t"><b>${TT[t.type]||t.type}${stt}</b><small>${new Date(t.created*1000).toLocaleString('ru-RU',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}${t.peer&&t.type!=='stake'&&t.type!=='unstake'?' · '+short(t.peer):''}</small>${t.comment?`<small style="display:block">${esc(t.comment)}</small>`:''}</div><div class="r">${am}</div></div>`}).join('')}</div>`:'<div class="center">Операций пока нет</div>'):'<div class="center"><span class="spin"></span></div>'),null,{});
+  try{const j=await api('/api/history');o.st.items=j.items}catch(e){o.st.items=[];toast(e.message)}paint(o);
+}
+function settingsSheet(){
+  openSheet(o=>{const d=S.data,bio=kv.get('bio')==='1',can=A.bioAvailable();return hd('Настройки')+
+  `<div class="card"><button class="row" data-a="copyaddr"><div class="ai" style="width:48px;height:48px;background:#1f3454;color:var(--bl)">${ic('book',26)}</div><div class="t"><b>${esc(d.user.username)}</b><small>${short(d.user.address)} · нажми, чтобы скопировать</small></div></button></div>
+  <div class="card" style="margin-top:12px">
+  ${can?`<button class="row" data-a="tbio">${ic('fp')}<div class="t"><b>Вход по биометрии</b></div><div class="sw ${bio?'on':''}"></div></button>`:''}
+  <button class="row" data-a="chpin">${ic('key')}<div class="t"><b>Сменить ПИН-код</b></div></button>
+  <button class="row" data-a="chpw">${ic('gear')}<div class="t"><b>Сменить пароль</b></div></button>
+  <button class="row" data-a="support">${ic('help')}<div class="t"><b>Поддержка</b></div></button>
+  <button class="row" data-a="chkupd">${ic('down')}<div class="t"><b>Обновление приложения</b><small>${S.upd?'Доступна версия '+esc(S.upd.version_name):'Версия '+esc(INFO.versionName)+' · нажми для проверки'}</small></div>${S.upd?'<span class="badge">новое</span>':''}</button>
+  ${d.user.is_admin?`<button class="row" data-a="admin">${ic('gear')}<div class="t"><b>Админ-панель</b><small>откроется в браузере</small></div></button>`:''}
+  <button class="row" data-a="logout" style="color:var(--rd)">${ic('logout')}<div class="t"><b>Выйти из аккаунта</b></div></button></div>
+  <p class="note">Keeper ${esc(INFO.versionName)} · ${esc(SERVER.replace(/^https?:\/\//,''))}</p>`});
+}
+function passwordSheet(){
+  openSheet(o=>hd('Сменить пароль',{back:1})+`<div class="field"><div><label>Текущий пароль</label><input id="p0" type="password"></div></div><div class="field"><div><label>Новый пароль (мин. 6)</label><input id="p1" type="password"></div></div><p class="err" id="pe"></p><button class="cta" data-a="pwgo">Сохранить</button>`);
+}
+function updateSheet(){
+  const v=S.upd;if(!v)return;
+  openSheet(o=>hd('Обновление',{noclose:v.mandatory})+`<div style="text-align:center;padding:6px 0 14px"><div style="color:var(--bl)">${ic('down',64)}</div><h2 style="margin:10px 0 4px">Keeper ${esc(v.version_name)}</h2><p style="color:var(--mut);margin:0">${esc(v.changelog||'Улучшения и исправления')}</p><p style="color:var(--mut);font-size:14px">${v.size?(v.size/1048576).toFixed(1)+' МБ · ':''}Данные и вход сохранятся — приложение обновится поверх.</p></div>
+  <div class="bar" id="ubar" hidden><i id="ubi"></i></div><button class="cta" id="ugo" data-a="doupd">Обновить</button>${v.mandatory?'':'<button class="cta sec" data-a="back">Позже</button>'}`,null,{lock:!!v.mandatory});
+}
+window.__upd=p=>{const b=$('#ubi');if(!b)return;$('#ubar').hidden=false;b.style.width=p+'%';$('#ugo').textContent=p>=100?'Открываю установщик…':'Загрузка '+p+'%'};
+window.__updErr=m=>{const g=$('#ugo');if(g){g.disabled=false;g.textContent='Повторить'}toast(m)};
+
+/* ====================== экраны ====================== */
+function serverSetup(){
+  $('#app').innerHTML=`<div class="auth"><img src="logo.png"><h1>Keeper</h1><p>Введите адрес вашего сервера<br>(например https://имя.pythonanywhere.com)</p><form id="f"><div class="field"><div><label>Адрес сервера</label><input id="u" placeholder="https://…" autocapitalize="off" autocomplete="off"></div></div><p class="err" id="e"></p><button class="cta">Продолжить</button></form></div>`;
+  $('#f').onsubmit=e=>{e.preventDefault();let u=$('#u').value.trim().replace(/\/+$/,'');if(!/^https?:\/\/.+/.test(u)){$('#e').textContent='Адрес должен начинаться с http:// или https://';return}A.set('server',u);boot()};
+}
+function authScreen(msg,reg){
+  $('#app').innerHTML=`<div class="auth"><img src="logo.png"><h1>Keeper</h1><p>${reg?'Создайте аккаунт':'Войдите в аккаунт'}</p>
+  <form id="f"><div class="field"><div><label>Логин</label><input id="u" autocapitalize="off" autocomplete="username" spellcheck="false"></div></div>
+  <div class="field"><div><label>Пароль</label><input id="p" type="password" autocomplete="${reg?'new-password':'current-password'}"></div></div>
+  ${reg?'<div class="field"><div><label>Повторите пароль</label><input id="p2" type="password" autocomplete="new-password"></div></div>':''}
+  <p class="err" id="e">${esc(msg||'')}</p><button class="cta" id="b">${reg?'Зарегистрироваться':'Войти'}</button></form>
+  <button class="link" id="sw">${reg?'Уже есть аккаунт? Войти':'Нет аккаунта? Регистрация'}</button></div>`;
+  $('#sw').onclick=()=>authScreen('',!reg);
+  $('#f').onsubmit=async e=>{e.preventDefault();const u=$('#u').value.trim(),p=$('#p').value,er=$('#e'),b=$('#b');er.textContent='';
+    if(reg&&p!==$('#p2').value){er.textContent='Пароли не совпадают';return}
+    b.disabled=true;b.innerHTML='<span class="spin"></span>';
+    try{const j=await api(reg?'/api/register':'/api/login',{username:u,password:p});TOKEN=j.token;kv.set('token',TOKEN);setupPin(()=>askBio(start))}
+    catch(x){er.textContent=x.message;b.disabled=false;b.textContent=reg?'Зарегистрироваться':'Войти'}};
+}
+const needSetup=()=>A.bioAvailable()&&kv.get('bio')!=='1';
+function viewWallet(){
+  const d=S.data,tot=totalUsd(),st=d.stake,g=asset('GRAM');
+  const act=(i,t,a)=>`<button class="act" data-a="${a}"><i>${ic(i)}</i>${t}</button>`;
+  const rows=d.assets.filter(a=>a.section==='core'||balOf(a.symbol)>0);
+  return `<div class="top"><button class="rb" data-a="qr">${ic('scan')}</button><button class="pillb" data-a="copyaddr">${ic('wallet',22)}<span>${esc(d.user.username)}</span>${ic('chev',16)}</button><button class="rb" data-a="hist">${ic('clock')}</button><button class="rb" data-a="settings">${ic('gear')}${S.upd||needSetup()?'<i class="dot"></i>':''}</button></div>
+  <div class="bal">${usd(tot)} $</div>
+  <div class="addr" data-a="copyaddr">Ваш адрес ${short(d.user.address)} <span class="tag">KP</span></div>
+  <div class="acts">${act('up','Отправить','send')}${act('down','Пополнить','topup')}${act('swap','Обменять','swap')}${act('stake','Застейкать','stake')}</div>
+  ${d.cfg.banner_enabled==='1'&&!S.bannerOff&&d.cfg.banner_title?`<div class="banner" ${d.cfg.banner_link?'data-a="banner"':''}><b>${esc(d.cfg.banner_title)}</b><span>${esc(d.cfg.banner_text)} ›</span><button class="x" data-a="bannerx">${ic('x',16)}</button></div>`:''}
+  ${needSetup()?`<h3>Завершить установку</h3><button class="setup" data-a="enablebio" style="width:100%;text-align:left"><div class="ic">${ic('fp',30)}</div><div><b>Включите вход по биометрии</b><small>Быстрый и безопасный вход в приложение</small></div></button>`:''}
+  <div class="card" style="margin-top:6px">${rows.map(a=>`<button class="item" style="width:100%;text-align:left" data-a="asset" data-s="${esc(a.symbol)}">${aicon(a,48)}<div class="t"><b>${esc(a.symbol)}</b><small>$${usd(a.price)} <span class="${a.change>=0?'up':'dn'}">${a.change>=0?'+':'−'}${num(Math.abs(a.change),2)}%</span></small></div><div class="r"><b>${num(balOf(a.symbol))}</b><small>$${usd(balOf(a.symbol)*a.price)}</small></div></button>`).join('')}
+  ${st.amount>0?`<button class="item" style="width:100%;text-align:left" data-a="stake">${aicon(g,48)}<div class="t"><b>GRAM · ${esc(st.pool)}</b><small>В стейкинге · APY ${num(st.apy,2)}%</small></div><div class="r"><b>${num(stakeTot(),4)}</b><small>$${usd(stakeTot()*g.price)}</small></div></button>`:''}</div>`;
+}
+function tradeGrid(){
+  const q=S.q.trim().toLowerCase(),L=S.data.assets;
+  const cell=a=>`<button class="cell" data-a="asset" data-s="${esc(a.symbol)}">${aicon(a,66)}<b>${esc(a.symbol)}</b><span class="${a.change>=0?'up':'dn'}">${a.change>=0?'+':'−'} ${num(Math.abs(a.change),2)}%</span></button>`;
+  if(q){const m=L.filter(a=>a.symbol.toLowerCase().includes(q)||a.name.toLowerCase().includes(q));return m.length?`<div class="grid" style="margin-top:14px">${m.map(cell).join('')}</div>`:'<div class="center">Ничего не найдено</div>'}
+  const sec=(t,s)=>{const m=L.filter(a=>a.section===s);return m.length?`<h3>${t}</h3><div class="grid">${m.map(cell).join('')}</div>`:''};
+  return sec('Самые торгуемые','top')+sec('Рынок США и металлы','us');
+}
+function viewTrade(){return `<div class="search">${ic('search',24)}<input id="q" placeholder="Поиск по тикеру или названию" value="${esc(S.q)}" autocomplete="off"></div><div id="tg">${tradeGrid()}</div>`}
+function viewBrowser(){
+  const L=S.data.cfg.browser_apps||[];
+  return `<h3 style="margin-top:6px">Браузер</h3>`+(L.length?`<div class="card">${L.map((x,i)=>`<button class="item" style="width:100%;text-align:left" data-a="bapp" data-i="${i}"><div class="ai" style="width:48px;height:48px;background:var(--card2);font-size:24px">${esc(x.icon||'🌐')}</div><div class="t"><b>${esc(x.name)}</b><small>${esc(x.desc||'')}</small></div></button>`).join('')}</div>`:'<div class="center">Здесь появятся приложения</div>');
+}
+function render(){
+  const app=$('#app');
+  if(!S.data){app.innerHTML=`<div class="auth"><img src="logo.png"><h1>Keeper</h1><p>Не удалось связаться с сервером</p><button class="cta" style="max-width:300px" data-a="retry">Повторить</button><button class="link" data-a="chserver">Сменить адрес сервера</button></div>`;return}
+  const old=$('.content',app),sc=old?old.scrollTop:0,same=old&&old.dataset.tab===S.tab;
+  const tb=(t,i,n)=>`<button class="tb ${S.tab===t?'on':''}" data-a="tab" data-t="${t}">${ic(i)}${n}</button>`;
+  app.innerHTML=`<div class="content" data-tab="${S.tab}" ${same?'style="animation:none"':''}>${S.tab==='wallet'?viewWallet():S.tab==='trade'?viewTrade():viewBrowser()}</div><nav class="tabbar">${tb('wallet','wallet','Кошелёк')}${tb('trade','chart','Трейдинг')}${tb('browser','compass','Браузер')}</nav>`;
+  if(same)$('.content',app).scrollTop=sc;
+  const q=$('#q');if(q)q.oninput=()=>{S.q=q.value;$('#tg').innerHTML=tradeGrid()};
+}
+
+/* ====================== действия ====================== */
+const ACT={
+  tab:t=>{S.tab=t.dataset.t;render()},retry:async()=>{await refresh();render()},
+  chserver:()=>{A.set('server','');INFO=JSON.parse(A.info());serverSetup()},
+  copyaddr:()=>{A.copy(S.data.user.address);toast('Адрес скопирован')},
+  shareaddr:()=>A.share(S.data.user.address),qr:()=>receiveSheet(''),
+  send:sendMenu,topup:depositMenu,swap:()=>swapSheet('GRAM','USDT'),stake:stakeSheet,hist:historySheet,settings:settingsSheet,
+  banner:()=>A.openUrl(S.data.cfg.banner_link),bannerx:(t,e)=>{e.stopPropagation();S.bannerOff=true;render()},
+  bapp:t=>{const x=S.data.cfg.browser_apps[+t.dataset.i];x&&x.url?A.openUrl(x.url):toast('Скоро')},
+  back:popSheet,closeall:closeAll,
+  asset:t=>assetSheet(t.dataset.s),
+  abuy:t=>{popSheet();swapSheet(t.dataset.s==='USDT'?'GRAM':'USDT',t.dataset.s==='USDT'?'GRAM':t.dataset.s)},
+  asell:t=>{popSheet();swapSheet(t.dataset.s,t.dataset.s==='USDT'?'GRAM':'USDT')},
+  m_send:()=>pickAsset('Выберите актив',s=>sendForm(s),a=>a.section==='core'||balOf(a.symbol)>0),
+  m_sell:()=>supportOpen(),m_usdt:()=>{popSheet();swapSheet('USDT','GRAM')},
+  d_recv:()=>receiveSheet(''),d_usdt:()=>receiveSheet('USDT'),d_buy:()=>supportOpen(),d_swap:()=>{popSheet();swapSheet('USDT','GRAM')},
+  pk:(t)=>{const o=sheets[sheets.length-1],f=o.st.onPick;popSheet();f&&f(t.dataset.s)},
+  spaste:()=>{const o=sheets[sheets.length-1],v=(A.paste()||'').trim();if(!v)return toast('Буфер пуст');o.st.to=v;const i=$('#sto',o.sh);i.value=v;i.dispatchEvent(new Event('input'))},
+  spsym:()=>{const o=sheets[sheets.length-1];pickAsset('Выберите актив',s=>{o.st.sym=s;o.st.amt='';paint(o)},a=>a.section==='core'||balOf(a.symbol)>0)},
+  smax:()=>{const o=sheets[sheets.length-1];o.st.amt=fin(balOf(o.st.sym));const i=$('#sam',o.sh);i.value=o.st.amt;i.dispatchEvent(new Event('input'))},
+  sgo:()=>{const s=sheets[sheets.length-1].st;confirmSheet('Подтверждение',[['Получатель',s.to.trim()],['Сумма',num(pa(s.amt))+' '+s.sym],['Комментарий',s.cm||'—']],'Отправить',async()=>{
+      const r=await api('/api/send',{symbol:s.sym,amount:String(pa(s.amt)),to:s.to.trim(),comment:s.cm});closeAll();await refresh();render();toast(r.status==='pending'?'Заявка принята и ожидает обработки':'Отправлено')})},
+  cok:async t=>{const o=sheets[sheets.length-1];t.disabled=true;t.innerHTML='<span class="spin"></span>';try{await o.st.fn()}catch(e){toast(e.message);t.disabled=false;t.textContent='Повторить'}},
+  swmax:()=>{const o=sheets[sheets.length-1];o.st.amt=fin(balOf(o.st.from));$('#sa',o.sh).value=o.st.amt;quote(o)},
+  swflip:()=>{const o=sheets[sheets.length-1],s=o.st;[s.from,s.to]=[s.to,s.from];s.amt='';paint(o)},
+  swpick:t=>{const o=sheets[sheets.length-1],w=t.dataset.w;pickAsset('Выберите актив',sym=>{const s=o.st,other=w==='from'?'to':'from';if(sym===s[other])s[other]=s[w];s[w]=sym;s.amt='';paint(o)})},
+  swgo:()=>{const s=sheets[sheets.length-1].st,o=sheets[sheets.length-1];confirmSheet('Подтверждение обмена',[['Отдаёте',num(pa(s.amt))+' '+s.from],['Получите ≈',$('#so',o.sh).textContent+' '+s.to],['Комиссия',num(S.data.cfg.swap_fee,2)+'%']],'Обменять',async()=>{
+      const r=await api('/api/swap',{from:s.from,to:s.to,amount:String(pa(s.amt))});closeAll();await refresh();render();toast('Получено '+num(r.received)+' '+r.symbol)})},
+  stmode:t=>{const o=sheets[sheets.length-1];o.st.mode=t.dataset.m;o.st.amt='';paint(o)},
+  stmax:()=>{const o=sheets[sheets.length-1],m=o.st.mode==='unstake'?stakeTot():balOf('GRAM');o.st.amt=fin(m);const i=$('#sta',o.sh);i.value=o.st.amt;i.dispatchEvent(new Event('input'))},
+  stinfo:()=>toast('Награды начисляются непрерывно, вывести можно в любой момент'),
+  stgo:async t=>{const o=sheets[sheets.length-1],s=o.st;t.disabled=true;t.innerHTML='<span class="spin"></span>';
+    try{await api(s.mode==='unstake'?'/api/unstake':'/api/stake',{amount:String(pa(s.amt))});closeAll();await refresh();render();toast(s.mode==='unstake'?'Выведено из стейкинга':'Застейкано')}
+    catch(e){toast(e.message);t.disabled=false;t.textContent='Продолжить'}},
+  tbio:async()=>{if(kv.get('bio')==='1'){kv.set('bio','0');paint(sheets[sheets.length-1]);render()}else{if(await bioAuth('Включить биометрию')){kv.set('bio','1');paint(sheets[sheets.length-1]);render();toast('Биометрия включена')}}},
+  enablebio:async()=>{if(await bioAuth('Включить биометрию')){kv.set('bio','1');render();toast('Биометрия включена')}},
+  bioyes:async()=>{const n=sheets[sheets.length-1].st.next;if(await bioAuth('Включить биометрию'))kv.set('bio','1');closeAll();n&&n()},
+  bioskip:()=>{const n=sheets[sheets.length-1].st.next;closeAll();n&&n()},
+  chpin:()=>changePin(),chpw:passwordSheet,
+  pwgo:async()=>{const e=$('#pe');try{await api('/api/password',{old:$('#p0').value,new:$('#p1').value});popSheet();toast('Пароль изменён')}catch(x){e.textContent=x.message}},
+  support:()=>supportOpen(),admin:()=>A.openUrl(SERVER+'/admin'),
+  chkupd:async()=>{if(S.upd)updateSheet();else await checkUpdate(true)},
+  doupd:t=>{t.disabled=true;t.textContent='Загрузка…';$('#ubar').hidden=false;A.update(SERVER+S.upd.url)},
+  logout:()=>confirmSheet('Выйти?',[['Аккаунт',S.data.user.username]],'Выйти',()=>logout())
+};
+function supportOpen(){const l=S.data.cfg.support_link;if(l&&/^https?:\/\/.{4,}/.test(l))A.openUrl(l);else toast('Свяжитесь с поддержкой')}
+document.body.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t)return;const f=ACT[t.dataset.a];if(f)f(t,e)});
+window.__back=()=>{
+  if(!$('#pin').hidden){const c=$('#pin [data-k=cancel]');if(c){c.click();return true}return false}
+  if(sheets.length){if(sheets[sheets.length-1].st.lock)return true;popSheet();return true}
+  if(TOKEN&&S.data&&S.tab!=='wallet'){S.tab='wallet';render();return true}
+  return false;
+};
+
+/* ====================== жизненный цикл ====================== */
+async function checkUpdate(manual){
+  try{const v=await api('/api/app/version');
+    if(v.version_code>INFO.versionCode){S.upd=v;if(manual||!S.updShown){S.updShown=true;if(!LOCKED)updateSheet()}render();return}
+    S.upd=null;if(manual)toast('У вас последняя версия')}
+  catch(e){if(manual)toast(e.message)}
+}
+async function start(){
+  $('#app').innerHTML='<div class="center" style="padding-top:40vh"><span class="spin"></span></div>';
+  await refresh();render();checkUpdate(false);
+}
+async function logout(msg){
+  const t=TOKEN;TOKEN=null;
+  if(t)try{fetch(SERVER+'/api/logout',{method:'POST',headers:{Authorization:'Bearer '+t}})}catch(e){}
+  ['token','pin','salt','bio','fails'].forEach(k=>kv.del(k));
+  S.data=null;S.tab='wallet';S.upd=null;S.updShown=false;closeAll();$('#pin').hidden=true;LOCKED=false;authScreen(typeof msg==='string'?msg:'');
+}
+function boot(){
+  INFO=JSON.parse(A.info());SERVER=(INFO.serverUrl||'').trim().replace(/\/+$/,'');
+  if(!SERVER||/YOUR-NAME/i.test(SERVER))return serverSetup();
+  TOKEN=kv.get('token');
+  if(!TOKEN)return authScreen();
+  if(!kv.get('pin')||!kv.get('salt'))return setupPin(()=>askBio(start));
+  $('#app').innerHTML='';lock(start);
+}
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){HID_AT=Date.now();return}
+  if(!TOKEN||LOCKED||!kv.get('pin'))return;
+  if(Date.now()-HID_AT>15000){closeAll();lock(async()=>{await refresh();render()})}
+  else refresh().then(()=>{if(!sheets.length)render()});
+});
+setInterval(async()=>{if(!TOKEN||LOCKED||document.hidden||!S.data)return;if(await refresh()&&!sheets.length&&$('#pin').hidden&&document.activeElement.tagName!=='INPUT')render()},20000);
+boot();
+</script>
+</body>
+</html>

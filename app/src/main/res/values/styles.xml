@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Keeper" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/keeper_bg</item>
+        <item name="android:statusBarColor">@color/keeper_bg</item>
+        <item name="android:navigationBarColor">@color/keeper_bg</item>
+        <item name="colorPrimary">@color/keeper_blue</item>
+        <item name="colorAccent">@color/keeper_blue</item>
+    </style>
+</resources>
