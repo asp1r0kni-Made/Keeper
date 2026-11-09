@@ -1,0 +1,59 @@
+name: Build Keeper APK
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      # Необязательно: авто-выкладка APK на твой сервер (тогда приложения сами предложат обновиться)
+      UPLOAD_URL: ${{ secrets.KEEPER_UPLOAD_URL }}      # например https://NAME.pythonanywhere.com
+      UPLOAD_TOKEN: ${{ secrets.KEEPER_UPLOAD_TOKEN }}  # тот же, что UPLOAD_TOKEN в server.py
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Версия
+        run: |
+          echo "KEEPER_VERSION_CODE=$(( $(date +%s) / 60 ))" >> $GITHUB_ENV
+          echo "KEEPER_VERSION_NAME=1.0.${{ github.run_number }}" >> $GITHUB_ENV
+
+      - name: Сборка release APK
+        env:
+          KEEPER_SERVER_URL: ${{ vars.KEEPER_SERVER_URL }}
+        run: gradle --no-daemon assembleRelease
+
+      - name: Подготовка файла
+        run: |
+          mkdir -p out
+          APK=$(ls app/build/outputs/apk/release/*.apk | head -n1)
+          cp "$APK" "out/Keeper-vc${KEEPER_VERSION_CODE}.apk"
+          ls -la out
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Keeper-APK
+          path: out/*.apk
+
+      - name: Выложить на сервер (если заданы секреты)
+        if: env.UPLOAD_URL != '' && env.UPLOAD_TOKEN != ''
+        env:
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+        run: |
+          curl -fsS -X POST "${UPLOAD_URL%/}/api/admin/upload_apk" \
+            -H "X-Upload-Token: ${UPLOAD_TOKEN}" \
+            -F "version_code=${KEEPER_VERSION_CODE}" \
+            -F "version_name=${KEEPER_VERSION_NAME}" \
+            -F "changelog=Сборка #${{ github.run_number }}: ${COMMIT_MSG}" \
+            -F "file=@out/Keeper-vc${KEEPER_VERSION_CODE}.apk"
