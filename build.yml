@@ -20,6 +20,14 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      - name: Установить Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Установить платформы Android
+        run: |
+          sdkmanager --sdk_root=$ANDROID_HOME "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
