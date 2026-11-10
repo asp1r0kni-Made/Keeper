@@ -20,7 +20,7 @@ input,textarea{font:inherit;color:inherit;-webkit-user-select:text;user-select:t
 .dot{position:absolute;top:6px;right:6px;width:9px;height:9px;border-radius:50%;background:var(--rd)}
 .pillb{display:flex;align-items:center;gap:8px;background:var(--card);padding:10px 16px;border-radius:30px;font-weight:600;font-size:17px;margin:0 auto 0 0}
 .top .pillb{margin:0 auto}
-.bal{text-align:center;font-size:54px;font-weight:700;margin:34px 0 4px;letter-spacing:-1px}
+.bal{text-align:center;font-size:54px;font-weight:700;margin:34px 0 4px;letter-spacing:-1px;white-space:nowrap}
 .addr{text-align:center;color:var(--mut);font-size:15px;display:flex;justify-content:center;gap:8px;align-items:center}
 .tag{background:rgba(62,207,142,.15);color:var(--gr);padding:2px 8px;border-radius:8px;font-size:12px;font-weight:700}
 .acts{display:flex;justify-content:space-around;margin:26px 0 20px}
@@ -34,8 +34,8 @@ h3{font-size:22px;margin:22px 0 12px}
 .card{background:var(--card);border-radius:var(--r);padding:6px 16px}
 .item{display:flex;align-items:center;gap:14px;padding:14px 0}
 .item+.item{border-top:1px solid #263043}
-.item .t{flex:1;min-width:0}.item .t b{display:block;font-size:17px}.item .t small{color:var(--mut)}
-.item .r{text-align:right}.item .r small{color:var(--mut);display:block}
+.item .t{flex:1;min-width:0}.item .t b{display:block;font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.item .t small{color:var(--mut)}
+.item .r{text-align:right;flex:none;max-width:60%}.item .r b,.item .r small{white-space:nowrap}.item .r small{color:var(--mut);display:block}
 .ai{border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;flex:none;overflow:hidden}
 .setup{display:flex;gap:14px;align-items:center;background:var(--card);border-radius:var(--r);padding:18px;margin-bottom:12px}
 .setup .ic{width:56px;height:56px;border-radius:50%;background:#3a3326;color:#f5a623;display:grid;place-items:center;flex:none}
@@ -46,8 +46,8 @@ h3{font-size:22px;margin:22px 0 12px}
 .cell{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:14px;min-width:0}
 .cell b{font-size:15px;max-width:100%;overflow:hidden;text-overflow:ellipsis}.up{color:var(--gr)}.dn{color:var(--rd)}
 .tabbar{display:flex;background:#0e131c;border-top:1px solid #1a2230;padding:6px 0 8px}
-.tb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--mut);font-size:14px;font-weight:600;padding:6px 0}
-.tb svg{width:30px;height:30px}.tb.on{color:var(--bl)}
+.tb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--mut);font-size:13px;font-weight:600;padding:6px 0}
+.tb svg{width:28px;height:28px}.tb.on{color:var(--bl)}
 .ov{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;opacity:0;transition:opacity .2s;z-index:20}
 .ov.in{opacity:1}.ov.under{visibility:hidden}
 .sh{width:100%;max-height:95dvh;overflow-y:auto;background:var(--bg);border-radius:28px 28px 0 0;padding:14px 16px 20px;transform:translateY(40px);transition:transform .22s cubic-bezier(.2,.8,.2,1)}
@@ -62,8 +62,8 @@ h3{font-size:22px;margin:22px 0 12px}
 .bl{display:flex;justify-content:space-between;color:var(--mut);font-size:17px}.bl a{color:var(--bl);font-weight:600;margin-left:8px}
 .br{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}
 .br input,.big{background:none;border:0;outline:0;font-size:38px;font-weight:600;width:100%;min-width:0;color:#fff}
-.big{color:var(--mut)}
-.chip{display:flex;align-items:center;gap:8px;background:var(--card2);padding:9px 12px;border-radius:30px;font-weight:700;font-size:20px;flex:none}
+.big{color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip{white-space:nowrap;display:flex;align-items:center;gap:8px;background:var(--card2);padding:9px 12px;border-radius:30px;font-weight:700;font-size:20px;flex:none}
 .chip svg{width:16px;height:16px;color:var(--mut)}
 .flip{width:48px;height:48px;border-radius:50%;background:var(--card2);display:grid;place-items:center;margin:-30px auto -18px;position:relative;z-index:2;border:4px solid var(--bg)}
 .flip svg{width:24px;height:24px}
@@ -99,6 +99,17 @@ h3{font-size:22px;margin:22px 0 12px}
 .auth img{width:96px;height:96px;border-radius:26px;margin-top:4vh}.auth h1{font-size:34px;margin:14px 0 4px}.auth p{color:var(--mut);margin:0 0 22px;text-align:center}
 .auth form{width:100%;max-width:420px}.err{color:var(--rd);text-align:center;min-height:22px;margin:4px 0}
 .link{color:var(--bl);text-align:center;display:block;margin:18px auto;font-weight:600}
+.flt{display:flex;gap:8px;margin:12px 0;align-items:center}.flt .mini{margin-left:auto;font-size:15px;padding:10px 14px}
+.sel{background:var(--card);color:#fff;border:0;border-radius:20px;padding:11px 12px;font:inherit;font-weight:600;max-width:32%}.sel option{background:#1c2431}
+.ad{background:var(--card);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.ah{display:flex;align-items:center;gap:10px}.ah small{color:var(--mut);margin-left:auto}
+.av{width:38px;height:38px;border-radius:50%;background:#1f3454;color:var(--bl);display:grid;place-items:center;font-weight:700;flex:none}
+.ap{font-size:26px;font-weight:700;margin:10px 0 4px;white-space:nowrap}.ap small{font-size:15px;color:var(--mut);font-weight:400}
+.al{color:var(--mut);font-size:14px;line-height:1.5}.al b{color:#fff;font-weight:600;white-space:nowrap}
+.am{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.ch{background:var(--card2);padding:4px 10px;border-radius:10px;font-size:13px}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid #263043}.kv span{color:var(--mut)}.kv b{text-align:right;word-break:break-word}
+.chat{background:var(--card);border-radius:var(--r);padding:10px;margin-top:12px;max-height:210px;min-height:60px;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
+.msg{max-width:80%;padding:8px 12px;border-radius:16px;background:var(--card2);word-break:break-word;font-size:15px;-webkit-user-select:text;user-select:text}.msg.me{align-self:flex-end;background:#1f4a86}.msg.sys{align-self:center;background:none;color:var(--mut);font-size:13px;text-align:center;max-width:95%}
 #toast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,20px);background:#2b3648;padding:12px 20px;border-radius:24px;opacity:0;pointer-events:none;transition:.25s;z-index:99;max-width:86%;text-align:center}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 .spin{width:22px;height:22px;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:rot .7s linear infinite;display:inline-block;vertical-align:middle}@keyframes rot{to{transform:rotate(360deg)}}
@@ -109,7 +120,6 @@ h3{font-size:22px;margin:22px 0 12px}
 <div id="sheets"></div>
 <div id="pin" hidden></div>
 <div id="toast"></div>
-<script src="lottie_light.min.js"></script>
 <script>
 'use strict';
 /* ====================== мост к Android (в браузере — заглушка для отладки) ====================== */
@@ -121,11 +131,16 @@ const A = window.Android || {
 };
 const $=(s,r=document)=>r.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const num=(n,d=6)=>Number(n||0).toLocaleString('ru-RU',{maximumFractionDigits:d});
-const usd=n=>{n=Number(n||0);return n>=1?num(n,2):n>=0.01?num(n,4):num(n,7)};
-const pa=v=>parseFloat(String(v).replace(',','.'))||0;
+const NB='\u00A0';
+function fmtNum(n,d,pad){n=Number(n);if(!isFinite(n))n=0;const neg=n<0;let t=Math.abs(n).toFixed(d);
+  if(!pad&&t.indexOf('.')>=0)t=t.replace(/0+$/,'').replace(/\.$/,'');
+  const x=t.split('.');x[0]=x[0].replace(/\B(?=(\d{3})+(?!\d))/g,NB);return(neg&&Number(t)!==0?'−':'')+x[0]+(x[1]?'.'+x[1]:'')}
+const num=(n,d=6)=>fmtNum(n,d,false);
+const usd=n=>{n=Number(n||0);return n>=1?fmtNum(n,2,true):n>=0.01?num(n,4):num(n,7)};
+const balFs=t=>t.length>17?30:t.length>14?36:t.length>11?44:54;
+const pa=v=>parseFloat(String(v).replace(/[\s\u00A0]/g,'').replace(',','.'))||0;
 const fin=n=>String(Math.floor(n*1e6+1e-7)/1e6);
-const short=a=>a?a.slice(0,4)+'…'+a.slice(-4):'';
+const short=a=>!a?'':a.length<=14?a:a.slice(0,4)+'…'+a.slice(-4);
 const kv={get:k=>A.get(k),set:(k,v)=>A.set(k,String(v)),del:k=>A.del(k)};
 let toastT;const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2400)};
 
@@ -151,12 +166,11 @@ card:'<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/>',
 qr:'<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><path d="M14 14h3v3h-3zM20 14v6h-3"/>',
 logout:'<path d="M9 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h4M16 8l4 4-4 4M20 12H9"/>',
 key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>',
+p2p:'<path d="M4 9a5 5 0 0 1 5-5h9l-3-3M20 15a5 5 0 0 1-5 5H6l3 3"/>',
 help:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01"/>'
 };
 const ic=(n,s)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"${s?` width="${s}" height="${s}"`:''}>${P[n]||''}</svg>`;
-const ICONS={GRAM:'icons/gram.png',USDT:'icons/usdt.png'};
-const pname=id=>((S.data.partners||[]).find(p=>p.id===id)||{}).name||id;
-const aicon0=(a,s=56)=>ICONS[a.symbol]?`<div class="ai" style="width:${s}px;height:${s}px"><img src="${ICONS[a.symbol]}" width="${s}" height="${s}" style="display:block;width:100%;height:100%;object-fit:cover" alt="${esc(a.symbol)}"></div>`:`<div class="ai" style="width:${s}px;height:${s}px;background:${esc(a.color)};font-size:${Math.round(s*.46)}px">${esc(a.icon||a.symbol[0])}</div>`;
+const aicon=(a,s=56)=>`<div class="ai" style="width:${s}px;height:${s}px;background:${esc(a.color)};font-size:${Math.round(s*.46)}px">${esc(a.icon||a.symbol[0])}</div>`;
 
 /* ====================== состояние / API ====================== */
 let SERVER='',INFO={},TOKEN=null,LOCKED=false,HID_AT=0;
@@ -244,7 +258,7 @@ function openSheet(render,mount,st={}){
   sheets.push(o);paint(o);requestAnimationFrame(()=>ov.classList.add('in'));return o;
 }
 function paint(o){o.sh.innerHTML=o.render(o);o.mount&&o.mount(o.sh,o)}
-function popSheet(){const o=sheets.pop();if(!o)return;o.ov.classList.remove('in');setTimeout(()=>o.ov.remove(),220);const n=sheets[sheets.length-1];if(n)n.ov.classList.remove('under')}
+function popSheet(){const o=sheets.pop();if(!o)return;if(o.onclose)o.onclose();o.ov.classList.remove('in');setTimeout(()=>o.ov.remove(),220);const n=sheets[sheets.length-1];if(n)n.ov.classList.remove('under')}
 function closeAll(){while(sheets.length)popSheet()}
 const hd=(t,o={})=>`<div class="hd">${o.back?`<button class="rb" data-a="back">${ic('back')}</button>`:o.info?`<button class="rb" data-a="${o.info}">${ic('info')}</button>`:'<span class="rb ph"></span>'}<h2>${t}</h2>${o.noclose?'<span class="rb ph"></span>':`<button class="rb" data-a="closeall">${ic('x')}</button>`}</div>`;
 const opt=(i,t,s,a,x='')=>`<button class="opt" data-a="${a}" ${x}><div class="ic">${ic(i)}</div><div><b>${t}</b><small>${s}</small></div></button>`;
@@ -253,34 +267,23 @@ function pickAsset(title,onPick,filter){
   const list=S.data.assets.filter(a=>!filter||filter(a));
   openSheet(o=>hd(title,{back:1})+`<div class="card">${list.map(a=>`<button class="item" style="width:100%;text-align:left" data-a="pk" data-s="${esc(a.symbol)}">${aicon(a,44)}<div class="t"><b>${esc(a.symbol)}</b><small>${esc(a.name)}</small></div><div class="r"><b>${num(balOf(a.symbol))}</b><small>$${usd(balOf(a.symbol)*a.price)}</small></div></button>`).join('')}</div>`,null,{onPick});
 }
-const aicon=(a,s=56)=>{const h=aicon0(a,s);return a.anim&&window.lottie?h.replace('<div class="ai"','<div class="ai" data-anim="'+esc(SERVER+a.anim)+'"'):h};
-const ANIMS=new Map();
-function initAnims(){if(!window.lottie)return;document.querySelectorAll('.ai[data-anim]:not([data-ok])').forEach(el=>{el.dataset.ok='1';const u=el.dataset.anim;let p=ANIMS.get(u);if(!p){p=fetch(u).then(r=>r.json());ANIMS.set(u,p)}
-p.then(d=>{el.innerHTML='';lottie.loadAnimation({container:el,renderer:'svg',loop:true,autoplay:true,animationData:JSON.parse(JSON.stringify(d))})}).catch(()=>{})})}
-let _aq=0;new MutationObserver(()=>{if(!_aq)_aq=requestAnimationFrame(()=>{_aq=0;initAnims()})}).observe(document.documentElement,{childList:true,subtree:true});
-function topupForm(sym){
-  openSheet(o=>{const s=o.st,a=asset(s.sym);return hd('Заявка на пополнение',{back:1})+
-  `<div class="box"><div class="br" style="margin:0"><span style="color:var(--mut);font-size:19px">Сумма</span><input id="tam" inputmode="decimal" placeholder="0" value="${esc(s.amt)}" style="font-size:28px;text-align:right" autocomplete="off"><button class="chip" data-a="tsym">${aicon(a,24)}${esc(s.sym)}</button></div></div>
-  <p class="note">Заявку рассмотрит администратор. После одобрения сумма появится на балансе.</p><button class="cta" id="tgo" data-a="tgo" disabled>Отправить заявку</button>`},
-  (sh,o)=>{const s=o.st,up=()=>{$('#tgo',sh).disabled=!(pa(s.amt)>0)};$('#tam',sh).oninput=e=>{s.amt=e.target.value;up()};up()},{sym:sym||'USDT',amt:''});
-}
-function sendMenu(){openSheet(()=>hd('Вывести')+opt('up','Отправить токены','На другой кошелёк','m_send')+(S.data.partners||[]).map(p=>opt('up','В '+esc(p.name),'Мгновенно на ваш аккаунт '+esc(p.name),'m_partner','data-p="'+esc(p.id)+'"')).join('')+opt('card','Продать на карту','Или другими способами — через поддержку','m_sell')+opt('swap','Обменивайте USDT на другие токены','Мгновенно внутри Keeper','m_usdt'))}
-function depositMenu(){openSheet(()=>hd('Пополнить')+opt('qr','Получить токены','Из другого кошелька — по адресу и QR','d_recv')+opt('card','Купить картой или P2P','Пополнение через поддержку','d_buy')+opt('card','Заявка на пополнение','Администратор зачислит после проверки','d_req')+opt('swap','Купить GRAM за другой токен','Обмен USDT и других активов','d_swap')+opt('down','Перевести стейблкоин','Отправьте USDT на свой адрес','d_usdt'))}
+function sendMenu(){openSheet(()=>hd('Вывести')+opt('up','Отправить токены','На другой кошелёк','m_send')+opt('card','Продать на карту','Или другими способами — через поддержку','m_sell')+opt('swap','Обменивайте USDT на другие токены','Мгновенно внутри Keeper','m_usdt'))}
+function depositMenu(){openSheet(()=>hd('Пополнить')+opt('qr','Получить токены','Из другого кошелька — по адресу и QR','d_recv')+opt('card','Купить картой или P2P','Пополнение через поддержку','d_buy')+opt('swap','Купить GRAM за другой токен','Обмен USDT и других активов','d_swap')+opt('down','Перевести стейблкоин','Отправьте USDT на свой адрес','d_usdt'))}
 function receiveSheet(sym){
   const addr=S.data.user.address,svg=A.qr(addr);
   openSheet(()=>hd('Получить '+(sym||''),{back:sheets.length>0})+(svg?`<div class="qr">${svg}</div>`:'')+`<p class="note">Отправляйте на этот адрес только токены Keeper (GRAM, USDT)</p><div class="mono">${esc(addr)}</div>
   <div style="display:flex;gap:10px;margin-top:12px"><button class="cta" data-a="copyaddr">Копировать</button><button class="cta sec" data-a="shareaddr">Поделиться</button></div>`);
 }
-function sendForm(sym,pt){
-  openSheet(o=>{const s=o.st,a=asset(s.sym);return hd((s.pt?'В '+esc(pname(s.pt))+' · ':'Отправить ')+esc(s.sym),{back:1})+
-  `<div class="field"><div><label>${s.pt?'Логин в '+esc(pname(s.pt)):'Адрес'}</label><input id="sto" placeholder="${s.pt?'username':'UQ…'}" value="${esc(s.to)}" autocomplete="off" autocapitalize="off" spellcheck="false"></div><button class="mini" data-a="spaste">Вставить</button></div>
+function sendForm(sym){
+  openSheet(o=>{const s=o.st,a=asset(s.sym);return hd('Отправить '+esc(s.sym),{back:1})+
+  `<div class="field"><div><label>Адрес</label><input id="sto" placeholder="UQ…" value="${esc(s.to)}" autocomplete="off" autocapitalize="off" spellcheck="false"></div><button class="mini" data-a="spaste">Вставить</button></div>
   <div class="box"><div class="br" style="margin:0"><span style="color:var(--mut);font-size:19px">Сумма</span><input id="sam" inputmode="decimal" placeholder="0" value="${esc(s.amt)}" style="font-size:28px;text-align:right" autocomplete="off"><button class="chip" data-a="spsym">${aicon(a,24)}${esc(s.sym)}${ic('upd')}</button></div></div>
   <div class="bl" style="margin:0 6px 12px"><span id="sus">$0 · Останется: ${num(balOf(s.sym))} ${esc(s.sym)}</span><a data-a="smax">МАКС</a></div>
   <div class="field"><div><label>Комментарий</label><input id="scm" maxlength="120" value="${esc(s.cm)}" autocomplete="off"></div></div>
-  <p class="note">${s.pt?'Деньги поступят на аккаунт «'+esc(pname(s.pt))+'» с этим логином. Проверьте логин: отмена невозможна.':'Адреса Keeper — мгновенно. Внешние адреса обрабатываются администратором.'}</p><button class="cta" id="sgo" data-a="sgo">Продолжить</button>`},
-  (sh,o)=>{const s=o.st;const up=()=>{const a=pa(s.amt),b=balOf(s.sym),ok=a>0&&a<=b+1e-9&&s.to.trim().length>=(s.pt?3:20);
+  <p class="note">Адреса Keeper — мгновенно. Внешние адреса обрабатываются администратором.</p><button class="cta" id="sgo" data-a="sgo">Продолжить</button>`},
+  (sh,o)=>{const s=o.st;const up=()=>{const a=pa(s.amt),b=balOf(s.sym),ok=a>0&&a<=b+1e-9&&s.to.trim().length>=20;
       $('#sus',sh).textContent='$'+usd(a*asset(s.sym).price)+' · Останется: '+num(Math.max(b-a,0))+' '+s.sym;$('#sgo',sh).disabled=!ok};
-    $('#sto',sh).oninput=e=>{s.to=e.target.value;up()};$('#sam',sh).oninput=e=>{s.amt=e.target.value;up()};$('#scm',sh).oninput=e=>{s.cm=e.target.value};up()},{sym,to:'',amt:'',cm:'',pt:!!pt});
+    $('#sto',sh).oninput=e=>{s.to=e.target.value;up()};$('#sam',sh).oninput=e=>{s.amt=e.target.value;up()};$('#scm',sh).oninput=e=>{s.cm=e.target.value};up()},{sym,to:'',amt:'',cm:''});
 }
 function confirmSheet(title,rows,okText,fn){
   openSheet(()=>hd(title,{back:1})+`<div class="card">${rows.map(r=>`<div class="item"><div class="t" style="color:var(--mut)">${r[0]}</div><div class="r" style="max-width:62%;word-break:break-all"><b style="font-size:16px">${esc(r[1])}</b></div></div>`).join('')}</div>
@@ -314,8 +317,8 @@ function assetSheet(sym){
   <div class="card"><div class="item"><div class="t"><b>Ваш баланс</b></div><div class="r"><b>${num(b)} ${esc(a.symbol)}</b><small>$${usd(b*a.price)}</small></div></div></div>
   <div style="display:flex;gap:10px;margin-top:14px"><button class="cta" data-a="abuy" data-s="${esc(sym)}">Купить</button><button class="cta sec" data-a="asell" data-s="${esc(sym)}">Продать</button></div>`);
 }
-const TT={send:'Отправлено',receive:'Получено',withdraw:'Вывод',swap:'Обмен',stake:'Стейкинг',unstake:'Вывод из стейкинга',admin_credit:'Пополнение',admin_debit:'Списание',partner_in:'Из другого приложения',partner_out:'В другое приложение'};
-const PLUS={receive:1,admin_credit:1,unstake:1,partner_in:1};
+const TT={send:'Отправлено',receive:'Получено',withdraw:'Вывод',swap:'Обмен',stake:'Стейкинг',unstake:'Вывод из стейкинга',admin_credit:'Пополнение',admin_debit:'Списание',p2p_lock:'P2P · заморожено',p2p_unlock:'P2P · возврат',p2p_buy:'P2P · покупка'};
+const PLUS={receive:1,admin_credit:1,unstake:1,p2p_unlock:1,p2p_buy:1};
 async function historySheet(){
   const o=openSheet(o=>hd('История')+(o.st.items?(o.st.items.length?`<div class="card">${o.st.items.map(t=>{const sw=t.type==='swap',pl=PLUS[t.type];const am=sw?`<b>+${num(t.amount2)} ${esc(t.symbol2)}</b><small>−${num(t.amount)} ${esc(t.symbol)}</small>`:`<b class="${pl?'up':''}">${pl?'+':'−'}${num(t.amount)} ${esc(t.symbol)}</b>`;
   const stt=t.status==='pending'?'<span class="badge">В обработке</span>':t.status==='rejected'?'<span class="badge" style="background:rgba(255,90,115,.15);color:var(--rd)">Отклонено, возвращено</span>':'';
@@ -362,7 +365,9 @@ function authScreen(msg,reg){
   $('#f').onsubmit=async e=>{e.preventDefault();const u=$('#u').value.trim(),p=$('#p').value,er=$('#e'),b=$('#b');er.textContent='';
     if(reg&&p!==$('#p2').value){er.textContent='Пароли не совпадают';return}
     b.disabled=true;b.innerHTML='<span class="spin"></span>';
-    try{const j=await api(reg?'/api/register':'/api/login',{username:u,password:p});TOKEN=j.token;kv.set('token',TOKEN);setupPin(()=>askBio(start))}
+    try{const j=await api(reg?'/api/register':'/api/login',{username:u,password:p});TOKEN=j.token;kv.set('token',TOKEN);const uk=u.toLowerCase(),pu=kv.get('pin_user');
+      if(kv.get('pin')&&kv.get('salt')&&(!pu||pu===uk)){kv.set('pin_user',uk);kv.set('fails',0);askBio(start)}
+      else{['pin','salt','bio','fails'].forEach(k=>kv.del(k));kv.set('pin_user',uk);setupPin(()=>askBio(start))}}
     catch(x){er.textContent=x.message;b.disabled=false;b.textContent=reg?'Зарегистрироваться':'Войти'}};
 }
 const needSetup=()=>A.bioAvailable()&&kv.get('bio')!=='1';
@@ -371,7 +376,7 @@ function viewWallet(){
   const act=(i,t,a)=>`<button class="act" data-a="${a}"><i>${ic(i)}</i>${t}</button>`;
   const rows=d.assets.filter(a=>a.section==='core'||balOf(a.symbol)>0);
   return `<div class="top"><button class="rb" data-a="qr">${ic('scan')}</button><button class="pillb" data-a="copyaddr">${ic('wallet',22)}<span>${esc(d.user.username)}</span>${ic('chev',16)}</button><button class="rb" data-a="hist">${ic('clock')}</button><button class="rb" data-a="settings">${ic('gear')}${S.upd||needSetup()?'<i class="dot"></i>':''}</button></div>
-  <div class="bal">${usd(tot)} $</div>
+  <div class="bal" style="font-size:${balFs(usd(tot)+' $')}px">${usd(tot)}${NB}$</div>
   <div class="addr" data-a="copyaddr">Ваш адрес ${short(d.user.address)} <span class="tag">KP</span></div>
   <div class="acts">${act('up','Отправить','send')}${act('down','Пополнить','topup')}${act('swap','Обменять','swap')}${act('stake','Застейкать','stake')}</div>
   ${d.cfg.banner_enabled==='1'&&!S.bannerOff&&d.cfg.banner_title?`<div class="banner" ${d.cfg.banner_link?'data-a="banner"':''}><b>${esc(d.cfg.banner_title)}</b><span>${esc(d.cfg.banner_text)} ›</span><button class="x" data-a="bannerx">${ic('x',16)}</button></div>`:''}
@@ -396,14 +401,133 @@ function render(){
   if(!S.data){app.innerHTML=`<div class="auth"><img src="logo.png"><h1>Keeper</h1><p>Не удалось связаться с сервером</p><button class="cta" style="max-width:300px" data-a="retry">Повторить</button><button class="link" data-a="chserver">Сменить адрес сервера</button></div>`;return}
   const old=$('.content',app),sc=old?old.scrollTop:0,same=old&&old.dataset.tab===S.tab;
   const tb=(t,i,n)=>`<button class="tb ${S.tab===t?'on':''}" data-a="tab" data-t="${t}">${ic(i)}${n}</button>`;
-  app.innerHTML=`<div class="content" data-tab="${S.tab}" ${same?'style="animation:none"':''}>${S.tab==='wallet'?viewWallet():S.tab==='trade'?viewTrade():viewBrowser()}</div><nav class="tabbar">${tb('wallet','wallet','Кошелёк')}${tb('trade','chart','Трейдинг')}${tb('browser','compass','Браузер')}</nav>`;
+  app.innerHTML=`<div class="content" data-tab="${S.tab}" ${same?'style="animation:none"':''}>${S.tab==='wallet'?viewWallet():S.tab==='trade'?viewTrade():S.tab==='p2p'?viewP2P():viewBrowser()}</div><nav class="tabbar">${tb('wallet','wallet','Кошелёк')}${tb('trade','chart','Трейдинг')}${tb('p2p','p2p','P2P')}${tb('browser','compass','Браузер')}</nav>`;
   if(same)$('.content',app).scrollTop=sc;
   const q=$('#q');if(q)q.oninput=()=>{S.q=q.value;$('#tg').innerHTML=tradeGrid()};
+  if(S.tab==='p2p')p2pBind();
+}
+
+
+/* ====================== P2P ====================== */
+const P2S={type:'sell',sym:'USDT',fiat:null,ads:null};
+const fiats=()=>(S.data.cfg.p2p_fiats||'RUB').split(',').map(x=>x.trim()).filter(Boolean);
+const coreSyms=()=>S.data.assets.filter(a=>a.section==='core').map(a=>a.symbol);
+const selH=(id,list,cur)=>`<select class="sel" id="${id}">${list.map(x=>`<option ${x===cur?'selected':''}>${esc(x)}</option>`).join('')}</select>`;
+const when=t=>new Date(t*1000).toLocaleString('ru-RU',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+const STL={pending:'Ожидает оплаты',paid:'Оплачено',dispute:'Спор',completed:'Завершена',cancelled:'Отменена'};
+function viewP2P(){
+  if(!P2S.fiat)P2S.fiat=fiats()[0];
+  return `<div class="top"><h3 style="margin:6px 0;flex:1">P2P</h3><button class="mini" data-a="p2pmy">Сделки</button><button class="mini" data-a="p2pads">Мои</button></div>
+  <div class="seg" style="margin-top:12px"><button class="${P2S.type==='sell'?'on':''}" data-a="p2ptype" data-t="sell">Купить</button><button class="${P2S.type==='buy'?'on':''}" data-a="p2ptype" data-t="buy">Продать</button></div>
+  <div class="flt">${selH('p2s',coreSyms(),P2S.sym)}${selH('p2f',fiats(),P2S.fiat)}<button class="mini" data-a="p2pnew">＋ Объявление</button></div>
+  <div id="p2l">${p2pList()}</div>`;
+}
+function adCard(a){
+  const sell=a.type==='sell';
+  return `<div class="ad"><div class="ah"><div class="av">${esc((a.username||'?')[0].toUpperCase())}</div><b>${esc(a.username)}</b><small>${a.deals} сделок</small></div>
+  <div class="ap">${usd(a.price)} ${esc(a.fiat)} <small>за 1 ${esc(a.symbol)}</small></div>
+  <div class="al">Доступно <b>${num(a.remaining,4)} ${esc(a.symbol)}</b><br>Лимиты <b>${num(a.min_fiat,0)} – ${num(a.max_fiat,0)} ${esc(a.fiat)}</b></div>
+  <div class="am">${String(a.methods).split(',').map(m=>`<span class="ch">${esc(m.trim())}</span>`).join('')}</div>
+  ${a.mine?'<span class="badge" style="display:inline-block;margin:10px 0 0">Ваше объявление</span>':`<button class="cta" style="padding:13px;font-size:18px" data-a="p2popen" data-id="${a.id}">${sell?'Купить':'Продать'} ${esc(a.symbol)}</button>`}</div>`;
+}
+function p2pList(){
+  if(P2S.ads===null)return '<div class="center"><span class="spin"></span></div>';
+  if(!P2S.ads.length)return '<div class="center">Объявлений пока нет.<br>Создайте своё — «＋ Объявление»</div>';
+  return P2S.ads.map(adCard).join('');
+}
+async function loadAds(){
+  const l=$('#p2l');if(l)l.innerHTML=p2pList();
+  try{P2S.ads=(await api(`/api/p2p/ads?type=${P2S.type}&symbol=${encodeURIComponent(P2S.sym)}&fiat=${encodeURIComponent(P2S.fiat)}`)).items}
+  catch(e){P2S.ads=[];toast(e.message)}
+  const l2=$('#p2l');if(l2)l2.innerHTML=p2pList();
+}
+function p2pBind(){
+  const a=$('#p2s'),f=$('#p2f');if(!a)return;
+  a.onchange=()=>{P2S.sym=a.value;P2S.ads=null;loadAds()};f.onchange=()=>{P2S.fiat=f.value;P2S.ads=null;loadAds()};
+  if(P2S.ads===null)loadAds();
+}
+function p2pTake(a){
+  const sell=a.type==='sell';
+  const maxC=Math.min(a.remaining,a.max_fiat/a.price,sell?a.remaining:balOf(a.symbol));
+  openSheet(o=>hd((sell?'Купить ':'Продать ')+esc(a.symbol))+
+   `<div class="card"><div class="item"><div class="av">${esc((a.username||'?')[0].toUpperCase())}</div><div class="t"><b>${esc(a.username)}</b><small>${a.deals} сделок</small></div><div class="r"><b>${usd(a.price)} ${esc(a.fiat)}</b><small>за 1 ${esc(a.symbol)}</small></div></div></div>
+   <div class="field" style="margin-top:12px"><div><label>${sell?'Я заплачу':'Я получу'}, ${esc(a.fiat)}</label><input id="pf" inputmode="decimal" placeholder="${num(a.min_fiat,0)} – ${num(a.max_fiat,0)}" autocomplete="off"></div></div>
+   <div class="field"><div><label>${sell?'Я получу':'Я отдам'}, ${esc(a.symbol)}</label><input id="pc" inputmode="decimal" placeholder="0" autocomplete="off"></div><button class="mini" data-a="p2pmax">Макс.</button></div>
+   ${sell?'':`<div class="field"><div><label>Ваши реквизиты для получения оплаты</label><input id="pd" placeholder="Банк, номер карты / телефон" autocomplete="off"></div></div>`}
+   <p class="note" style="text-align:left">Доступно: ${num(a.remaining,4)} ${esc(a.symbol)}${sell?'':' · ваш баланс: '+num(balOf(a.symbol),4)}<br>Оплата: ${esc(a.methods)}${a.terms?'<br>Условия: '+esc(a.terms):''}<br>Крипта замораживается на время сделки (эскроу).</p>
+   <p class="note" id="pe" style="color:var(--rd);margin:0"></p><button class="cta" id="pgo" data-a="p2pgo">Продолжить</button>`,
+  (sh,o)=>{
+    const pf=$('#pf',sh),pc=$('#pc',sh),pd=$('#pd',sh);
+    const check=()=>{const c=pa(pc.value),f=c*a.price;let m='';
+      if(c>0){if(c>a.remaining+1e-9)m='Больше, чем доступно';else if(!sell&&c>balOf(a.symbol)+1e-9)m='Недостаточно '+a.symbol;else if(f>a.max_fiat+0.01)m='Больше максимального лимита';else if(f<a.min_fiat&&Math.abs(c-a.remaining)>1e-9)m='Меньше минимального лимита'}
+      $('#pe',sh).textContent=m;$('#pgo',sh).disabled=!(c>0&&!m&&(sell||pd.value.trim().length>=3))};
+    pf.oninput=()=>{const f=pa(pf.value);pc.value=f?fin(Math.floor(f/a.price*1e6)/1e6):'';check()};
+    pc.oninput=()=>{const c=pa(pc.value);pf.value=c?String(Math.round(c*a.price*100)/100):'';check()};
+    if(pd)pd.oninput=check;
+    o.st.max=()=>{pc.value=fin(Math.floor(maxC*1e6)/1e6);pc.oninput()};check();
+  },{a});
+}
+function orderSheet(id){
+  const o=openSheet(o=>hd('Сделка #'+id)+`<div id="oh"></div><div id="oa"></div><div class="chat" id="om"></div>
+   <div class="field" style="margin-top:10px"><div><input id="ot" maxlength="300" placeholder="Сообщение…" autocomplete="off"></div><button class="mini" data-a="omsg">${ic('up',18)}</button></div>`,null,{});
+  const st=o.st;st.id=id;st.data=null;st.off=0;
+  st.load=async()=>{try{const j=await api('/api/p2p/order/'+id);st.data=j;st.off=j.now-Math.floor(Date.now()/1000);drawOrder(o)}catch(e){if(!st.data)toast(e.message)}};
+  st.t1=setInterval(st.load,5000);
+  st.t2=setInterval(()=>{const r=st.data&&st.data.order,e=$('#otm',o.sh);if(!r||!e||r.status!=='pending')return;
+    const left=r.expires-(Math.floor(Date.now()/1000)+st.off);if(left<=0){e.textContent='время вышло';if(!st.exp){st.exp=1;st.load()}return}
+    e.textContent=String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0')},1000);
+  o.onclose=()=>{clearInterval(st.t1);clearInterval(st.t2)};
+  st.load();
+}
+function drawOrder(o){
+  const {order:r,messages}=o.st.data,sh=o.sh,buyer=r.role==='buyer',other=buyer?r.seller:r.buyer;
+  const hint={pending:buyer?'Оплатите заказ и нажмите «Я оплатил»':'Ожидаем оплату от покупателя',paid:buyer?'Ждём подтверждения продавца':'Проверьте поступление денег и отпустите крипту',dispute:'Спор — решение примет администратор',completed:'Сделка завершена',cancelled:'Сделка отменена'}[r.status];
+  const live=['pending','paid','dispute'].includes(r.status);
+  $('#oh',sh).innerHTML=`<div class="card" style="padding:14px 16px"><div class="item" style="padding:4px 0 8px"><div class="t"><b style="font-size:20px">${buyer?'Покупка':'Продажа'} ${num(r.amount)} ${esc(r.symbol)}</b><small>${esc(hint)}</small></div><span class="badge">${STL[r.status]}</span></div>
+   <div class="kv"><span>Сумма</span><b>${num(r.total_fiat,2)} ${esc(r.fiat)}</b></div><div class="kv"><span>Цена</span><b>${usd(r.price)} ${esc(r.fiat)}</b></div>
+   <div class="kv"><span>${buyer?'Продавец':'Покупатель'}</span><b>${esc(other)}</b></div><div class="kv"><span>Способ оплаты</span><b>${esc(r.methods)}</b></div>
+   ${r.status==='pending'?'<div class="kv"><span>Осталось на оплату</span><b id="otm">—</b></div>':''}</div>
+   ${live?`<div class="card" style="margin-top:12px;padding:14px 16px"><small style="color:var(--mut)">Реквизиты ${buyer?'для оплаты':'получателя (ваши)'}</small><div class="mono" style="margin-top:8px;text-align:left;white-space:pre-wrap">${esc(r.details)}</div><button class="mini" data-a="p2pcopy" style="margin-top:10px">Копировать</button></div>`:''}`;
+  let b='';
+  if(r.status==='pending'){if(buyer)b+='<button class="cta" data-a="p2pdo" data-k="paid">Я оплатил</button>';b+='<button class="cta red" data-a="p2pdo" data-k="cancel">Отменить сделку</button>'}
+  else if(r.status==='paid'){if(!buyer)b+='<button class="cta" data-a="p2pdo" data-k="release">Деньги получил — отпустить крипту</button>';b+='<button class="cta red" data-a="p2pdo" data-k="dispute">Открыть спор</button>'}
+  else if(r.status==='dispute'&&!buyer)b+='<button class="cta" data-a="p2pdo" data-k="release">Отпустить крипту покупателю</button>';
+  $('#oa',sh).innerHTML=b;
+  const m=$('#om',sh),bottom=m.scrollHeight-m.scrollTop-m.clientHeight<40;
+  m.innerHTML=messages.map(x=>`<div class="msg ${x.system?'sys':x.mine?'me':''}">${esc(x.text)}</div>`).join('');
+  if(bottom||!o.st.shown)m.scrollTop=m.scrollHeight;o.st.shown=1;
+}
+async function p2pMySheet(){
+  const o=openSheet(o=>hd('Мои сделки')+(o.st.items?(o.st.items.length?`<div class="card">${o.st.items.map(r=>{const bu=r.role==='buyer',oth=bu?r.seller:r.buyer;return `<button class="item" style="width:100%;text-align:left" data-a="p2pord" data-id="${r.id}"><div class="av">${esc(oth[0].toUpperCase())}</div><div class="t"><b>${bu?'Покупка':'Продажа'} ${num(r.amount,4)} ${esc(r.symbol)}</b><small>${esc(oth)} · ${when(r.created)}</small></div><div class="r"><b>${num(r.total_fiat,2)} ${esc(r.fiat)}</b><small>${STL[r.status]}</small></div></button>`}).join('')}</div>`:'<div class="center">Сделок пока нет</div>'):'<div class="center"><span class="spin"></span></div>'),null,{});
+  try{o.st.items=(await api('/api/p2p/orders')).items}catch(e){o.st.items=[];toast(e.message)}paint(o);
+}
+async function p2pAdsSheet(){
+  const o=openSheet(o=>hd('Мои объявления')+`<button class="cta sec" style="margin:0 0 12px" data-a="p2pnew">＋ Новое объявление</button>`+(o.st.items?(o.st.items.length?o.st.items.map(a=>`<div class="ad"><div class="ah"><b>${a.type==='sell'?'Продаю':'Покупаю'} ${esc(a.symbol)}</b><small>${a.status==='open'?'активно':'закрыто'}</small></div>
+    <div class="ap">${usd(a.price)} ${esc(a.fiat)}</div><div class="al">Осталось <b>${num(a.remaining,4)}</b> из <b>${num(a.total,4)} ${esc(a.symbol)}</b><br>Лимиты <b>${num(a.min_fiat,0)} – ${num(a.max_fiat,0)} ${esc(a.fiat)}</b></div>
+    ${a.status==='open'?`<button class="cta red" style="padding:12px;font-size:17px" data-a="p2pclose" data-id="${a.id}">Закрыть${a.type==='sell'&&a.remaining>0?' и вернуть '+num(a.remaining,4)+' '+esc(a.symbol):''}</button>`:''}</div>`).join(''):'<div class="center">Объявлений нет</div>'):'<div class="center"><span class="spin"></span></div>'),null,{});
+  o.st.reload=async()=>{try{o.st.items=(await api('/api/p2p/myads')).items}catch(e){o.st.items=[];toast(e.message)}paint(o)};
+  o.st.reload();
+}
+function saveAd(o){const g=i=>{const e=$('#'+i,o.sh);return e?e.value:null},s=o.st;
+  [['ns','sym'],['nf','fiat'],['np','price'],['na','amt'],['nmin','min'],['nmax','max'],['nme','me'],['nde','de'],['nte','te']].forEach(([i,k])=>{const v=g(i);if(v!==null)s[k]=v})}
+function p2pNew(){
+  openSheet(o=>{const s=o.st,sell=s.type==='sell';return hd('Новое объявление')+
+  `<div class="seg"><button class="${sell?'on':''}" data-a="adtype" data-t="sell">Продать</button><button class="${sell?'':'on'}" data-a="adtype" data-t="buy">Купить</button></div>
+  <div class="flt">${selH('ns',coreSyms(),s.sym)}${selH('nf',fiats(),s.fiat)}</div>
+  <div class="field"><div><label>Цена за 1 ${esc(s.sym)}, ${esc(s.fiat)}</label><input id="np" inputmode="decimal" placeholder="например 95.5" value="${esc(s.price)}" autocomplete="off"></div></div>
+  <div class="field"><div><label>Количество, ${esc(s.sym)}${sell?' · доступно '+num(balOf(s.sym),4)+' (будет заморожено)':''}</label><input id="na" inputmode="decimal" value="${esc(s.amt)}" autocomplete="off"></div></div>
+  <div class="field"><div><label>Лимит от, ${esc(s.fiat)}</label><input id="nmin" inputmode="decimal" value="${esc(s.min)}" autocomplete="off"></div><div><label>до, ${esc(s.fiat)}</label><input id="nmax" inputmode="decimal" value="${esc(s.max)}" autocomplete="off"></div></div>
+  <div class="field"><div><label>Способы оплаты (через запятую)</label><input id="nme" value="${esc(s.me)}" autocomplete="off"></div></div>
+  ${sell?`<div class="field"><div><label>Ваши реквизиты для получения оплаты</label><input id="nde" value="${esc(s.de)}" autocomplete="off"></div></div>`:''}
+  <div class="field"><div><label>Условия (необязательно)</label><input id="nte" maxlength="300" value="${esc(s.te)}" autocomplete="off"></div></div>
+  <p class="err" id="ne"></p><button class="cta" data-a="adgo">Опубликовать</button>`},
+  (sh,o)=>{const r=()=>{saveAd(o);paint(o)};$('#ns',sh).onchange=r;$('#nf',sh).onchange=r},
+  {type:'sell',sym:'USDT',fiat:fiats()[0],price:'',amt:'',min:'',max:'',me:'',de:'',te:''});
 }
 
 /* ====================== действия ====================== */
 const ACT={
-  tab:t=>{S.tab=t.dataset.t;render()},retry:async()=>{await refresh();render()},
+  tab:t=>{S.tab=t.dataset.t;if(S.tab==='p2p')P2S.ads=null;render()},retry:async()=>{await refresh();render()},
   chserver:()=>{A.set('server','');INFO=JSON.parse(A.info());serverSetup()},
   copyaddr:()=>{A.copy(S.data.user.address);toast('Адрес скопирован')},
   shareaddr:()=>A.share(S.data.user.address),qr:()=>receiveSheet(''),
@@ -415,17 +539,14 @@ const ACT={
   abuy:t=>{popSheet();swapSheet(t.dataset.s==='USDT'?'GRAM':'USDT',t.dataset.s==='USDT'?'GRAM':t.dataset.s)},
   asell:t=>{popSheet();swapSheet(t.dataset.s,t.dataset.s==='USDT'?'GRAM':'USDT')},
   m_send:()=>pickAsset('Выберите актив',s=>sendForm(s),a=>a.section==='core'||balOf(a.symbol)>0),
-  m_partner:t=>{const pid=t.dataset.p;pickAsset('Выберите актив',s=>sendForm(s,pid),a=>a.symbol==='GRAM'||a.symbol==='USDT')},
   m_sell:()=>supportOpen(),m_usdt:()=>{popSheet();swapSheet('USDT','GRAM')},
-  d_recv:()=>receiveSheet(''),d_usdt:()=>receiveSheet('USDT'),d_buy:()=>supportOpen(),d_req:()=>pickAsset('Выберите актив',s=>topupForm(s),a=>a.section==='core'),
-  tsym:()=>{const o=sheets[sheets.length-1];pickAsset('Выберите актив',s=>{o.st.sym=s;paint(o)},a=>a.section==='core')},
-  tgo:async t=>{const s=sheets[sheets.length-1].st;t.disabled=true;try{await api('/api/topup',{symbol:s.sym,amount:String(pa(s.amt))});closeAll();toast('Заявка отправлена')}catch(e){toast(e.message);t.disabled=false}},d_swap:()=>{popSheet();swapSheet('USDT','GRAM')},
+  d_recv:()=>receiveSheet(''),d_usdt:()=>receiveSheet('USDT'),d_buy:()=>supportOpen(),d_swap:()=>{popSheet();swapSheet('USDT','GRAM')},
   pk:(t)=>{const o=sheets[sheets.length-1],f=o.st.onPick;popSheet();f&&f(t.dataset.s)},
   spaste:()=>{const o=sheets[sheets.length-1],v=(A.paste()||'').trim();if(!v)return toast('Буфер пуст');o.st.to=v;const i=$('#sto',o.sh);i.value=v;i.dispatchEvent(new Event('input'))},
   spsym:()=>{const o=sheets[sheets.length-1];pickAsset('Выберите актив',s=>{o.st.sym=s;o.st.amt='';paint(o)},a=>a.section==='core'||balOf(a.symbol)>0)},
   smax:()=>{const o=sheets[sheets.length-1];o.st.amt=fin(balOf(o.st.sym));const i=$('#sam',o.sh);i.value=o.st.amt;i.dispatchEvent(new Event('input'))},
-  sgo:()=>{const s=sheets[sheets.length-1].st;confirmSheet('Подтверждение',[['Получатель',(s.pt?pname(s.pt)+': ':'')+s.to.trim()],['Сумма',num(pa(s.amt))+' '+s.sym],['Комментарий',s.cm||'—']],'Отправить',async()=>{
-      const r=await api(s.pt?'/api/partner/send':'/api/send',{symbol:s.sym,amount:String(pa(s.amt)),to:s.to.trim(),comment:s.cm,partner:s.pt||undefined});closeAll();await refresh();render();toast(r.status==='pending'?(s.pt?'Перевод в обработке — '+pname(s.pt)+' пока не ответил':'Заявка принята и ожидает обработки'):'Отправлено')})},
+  sgo:()=>{const s=sheets[sheets.length-1].st;confirmSheet('Подтверждение',[['Получатель',s.to.trim()],['Сумма',num(pa(s.amt))+' '+s.sym],['Комментарий',s.cm||'—']],'Отправить',async()=>{
+      const r=await api('/api/send',{symbol:s.sym,amount:String(pa(s.amt)),to:s.to.trim(),comment:s.cm});closeAll();await refresh();render();toast(r.status==='pending'?'Заявка принята и ожидает обработки':'Отправлено')})},
   cok:async t=>{const o=sheets[sheets.length-1];t.disabled=true;t.innerHTML='<span class="spin"></span>';try{await o.st.fn()}catch(e){toast(e.message);t.disabled=false;t.textContent='Повторить'}},
   swmax:()=>{const o=sheets[sheets.length-1];o.st.amt=fin(balOf(o.st.from));$('#sa',o.sh).value=o.st.amt;quote(o)},
   swflip:()=>{const o=sheets[sheets.length-1],s=o.st;[s.from,s.to]=[s.to,s.from];s.amt='';paint(o)},
@@ -447,6 +568,25 @@ const ACT={
   support:()=>supportOpen(),admin:()=>A.openUrl(SERVER+'/admin'),
   chkupd:async()=>{if(S.upd)updateSheet();else await checkUpdate(true)},
   doupd:t=>{t.disabled=true;t.textContent='Загрузка…';$('#ubar').hidden=false;A.update(SERVER+S.upd.url)},
+  p2ptype:t=>{P2S.type=t.dataset.t;P2S.ads=null;render()},
+  p2pnew:()=>p2pNew(),p2pmy:p2pMySheet,p2pads:p2pAdsSheet,
+  p2popen:t=>{const a=(P2S.ads||[]).find(x=>x.id==t.dataset.id);if(a)p2pTake(a)},
+  p2pmax:()=>sheets[sheets.length-1].st.max(),
+  p2pgo:async t=>{const o=sheets[sheets.length-1],a=o.st.a,c=pa($('#pc',o.sh).value),d=$('#pd',o.sh);t.disabled=true;t.innerHTML='<span class="spin"></span>';
+    try{const r=await api('/api/p2p/order',{ad_id:a.id,amount:String(c),details:d?d.value.trim():''});popSheet();await refresh();render();orderSheet(r.id)}
+    catch(e){toast(e.message);t.disabled=false;t.textContent='Продолжить'}},
+  p2pord:t=>orderSheet(+t.dataset.id),
+  p2pcopy:()=>{const o=sheets[sheets.length-1];A.copy(o.st.data.order.details);toast('Реквизиты скопированы')},
+  omsg:async()=>{const o=sheets[sheets.length-1],i=$('#ot',o.sh),v=i.value.trim();if(!v)return;i.value='';try{await api('/api/p2p/order/'+o.st.id+'/msg',{text:v});o.st.shown=0;o.st.load()}catch(e){toast(e.message)}},
+  p2pdo:t=>{const o=sheets[sheets.length-1],k=t.dataset.k,r=o.st.data.order;
+    const M={paid:['Вы оплатили заказ?','Я оплатил'],cancel:['Отменить сделку?','Отменить'],release:['Вы получили деньги?','Отпустить крипту'],dispute:['Открыть спор?','Открыть спор']}[k];
+    confirmSheet(M[0],[['Сделка','#'+r.id],['Сумма',num(r.total_fiat,2)+' '+r.fiat],['Крипта',num(r.amount)+' '+r.symbol]],M[1],async()=>{await api('/api/p2p/order/'+r.id,{action:k});popSheet();o.st.shown=0;await o.st.load();await refresh();render()})},
+  p2pclose:t=>{const o=sheets[sheets.length-1],id=t.dataset.id;confirmSheet('Закрыть объявление?',[['Объявление','#'+id]],'Закрыть',async()=>{await api('/api/p2p/ad/'+id+'/close',{});popSheet();await o.st.reload();await refresh();render();toast('Объявление закрыто')})},
+  adtype:t=>{const o=sheets[sheets.length-1];saveAd(o);o.st.type=t.dataset.t;paint(o)},
+  adgo:async t=>{const o=sheets[sheets.length-1];saveAd(o);const s=o.st;t.disabled=true;
+    try{await api('/api/p2p/ad',{type:s.type,symbol:s.sym,fiat:s.fiat,price:s.price,amount:s.amt,min_fiat:s.min,max_fiat:s.max,methods:s.me,details:s.de,terms:s.te});
+      popSheet();toast('Объявление опубликовано');await refresh();P2S.ads=null;render();const top=sheets[sheets.length-1];if(top&&top.st.reload)top.st.reload()}
+    catch(e){$('#ne',o.sh).textContent=e.message;t.disabled=false}},
   logout:()=>confirmSheet('Выйти?',[['Аккаунт',S.data.user.username]],'Выйти',()=>logout())
 };
 function supportOpen(){const l=S.data.cfg.support_link;if(l&&/^https?:\/\/.{4,}/.test(l))A.openUrl(l);else toast('Свяжитесь с поддержкой')}
@@ -472,7 +612,7 @@ async function start(){
 async function logout(msg){
   const t=TOKEN;TOKEN=null;
   if(t)try{fetch(SERVER+'/api/logout',{method:'POST',headers:{Authorization:'Bearer '+t}})}catch(e){}
-  ['token','pin','salt','bio','fails'].forEach(k=>kv.del(k));
+  ['token','fails'].forEach(k=>kv.del(k)); // ПИН и биометрию НЕ стираем
   S.data=null;S.tab='wallet';S.upd=null;S.updShown=false;closeAll();$('#pin').hidden=true;LOCKED=false;authScreen(typeof msg==='string'?msg:'');
 }
 function boot(){

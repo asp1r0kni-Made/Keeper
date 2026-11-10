@@ -147,13 +147,14 @@ public class MainActivity extends AppCompatActivity {
 
         @JavascriptInterface
         public void set(String k, String v) {
-            if (k.equals("server")) prefs.edit().putString("server", v).apply();
-            else prefs.edit().putString("kv_" + k, v).apply();
+            // commit(): пишем на диск сразу, чтобы ПИН/токен не потерялись, если систему убьют приложение
+            if (k.equals("server")) prefs.edit().putString("server", v).commit();
+            else prefs.edit().putString("kv_" + k, v).commit();
         }
 
         @JavascriptInterface
         public void del(String k) {
-            prefs.edit().remove("kv_" + k).apply();
+            prefs.edit().remove("kv_" + k).commit();
         }
 
         // ---- биометрия
