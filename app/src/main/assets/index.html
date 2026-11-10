@@ -109,6 +109,7 @@ h3{font-size:22px;margin:22px 0 12px}
 <div id="sheets"></div>
 <div id="pin" hidden></div>
 <div id="toast"></div>
+<script src="lottie_light.min.js"></script>
 <script>
 'use strict';
 /* ====================== мост к Android (в браузере — заглушка для отладки) ====================== */
@@ -154,7 +155,8 @@ help:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7
 };
 const ic=(n,s)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"${s?` width="${s}" height="${s}"`:''}>${P[n]||''}</svg>`;
 const ICONS={GRAM:'icons/gram.png',USDT:'icons/usdt.png'};
-const aicon=(a,s=56)=>ICONS[a.symbol]?`<div class="ai" style="width:${s}px;height:${s}px"><img src="${ICONS[a.symbol]}" width="${s}" height="${s}" style="display:block;width:100%;height:100%;object-fit:cover" alt="${esc(a.symbol)}"></div>`:`<div class="ai" style="width:${s}px;height:${s}px;background:${esc(a.color)};font-size:${Math.round(s*.46)}px">${esc(a.icon||a.symbol[0])}</div>`;
+const pname=id=>((S.data.partners||[]).find(p=>p.id===id)||{}).name||id;
+const aicon0=(a,s=56)=>ICONS[a.symbol]?`<div class="ai" style="width:${s}px;height:${s}px"><img src="${ICONS[a.symbol]}" width="${s}" height="${s}" style="display:block;width:100%;height:100%;object-fit:cover" alt="${esc(a.symbol)}"></div>`:`<div class="ai" style="width:${s}px;height:${s}px;background:${esc(a.color)};font-size:${Math.round(s*.46)}px">${esc(a.icon||a.symbol[0])}</div>`;
 
 /* ====================== состояние / API ====================== */
 let SERVER='',INFO={},TOKEN=null,LOCKED=false,HID_AT=0;
@@ -251,23 +253,34 @@ function pickAsset(title,onPick,filter){
   const list=S.data.assets.filter(a=>!filter||filter(a));
   openSheet(o=>hd(title,{back:1})+`<div class="card">${list.map(a=>`<button class="item" style="width:100%;text-align:left" data-a="pk" data-s="${esc(a.symbol)}">${aicon(a,44)}<div class="t"><b>${esc(a.symbol)}</b><small>${esc(a.name)}</small></div><div class="r"><b>${num(balOf(a.symbol))}</b><small>$${usd(balOf(a.symbol)*a.price)}</small></div></button>`).join('')}</div>`,null,{onPick});
 }
-function sendMenu(){openSheet(()=>hd('Вывести')+opt('up','Отправить токены','На другой кошелёк','m_send')+opt('card','Продать на карту','Или другими способами — через поддержку','m_sell')+opt('swap','Обменивайте USDT на другие токены','Мгновенно внутри Keeper','m_usdt'))}
-function depositMenu(){openSheet(()=>hd('Пополнить')+opt('qr','Получить токены','Из другого кошелька — по адресу и QR','d_recv')+opt('card','Купить картой или P2P','Пополнение через поддержку','d_buy')+opt('swap','Купить GRAM за другой токен','Обмен USDT и других активов','d_swap')+opt('down','Перевести стейблкоин','Отправьте USDT на свой адрес','d_usdt'))}
+const aicon=(a,s=56)=>{const h=aicon0(a,s);return a.anim&&window.lottie?h.replace('<div class="ai"','<div class="ai" data-anim="'+esc(SERVER+a.anim)+'"'):h};
+const ANIMS=new Map();
+function initAnims(){if(!window.lottie)return;document.querySelectorAll('.ai[data-anim]:not([data-ok])').forEach(el=>{el.dataset.ok='1';const u=el.dataset.anim;let p=ANIMS.get(u);if(!p){p=fetch(u).then(r=>r.json());ANIMS.set(u,p)}
+p.then(d=>{el.innerHTML='';lottie.loadAnimation({container:el,renderer:'svg',loop:true,autoplay:true,animationData:JSON.parse(JSON.stringify(d))})}).catch(()=>{})})}
+let _aq=0;new MutationObserver(()=>{if(!_aq)_aq=requestAnimationFrame(()=>{_aq=0;initAnims()})}).observe(document.documentElement,{childList:true,subtree:true});
+function topupForm(sym){
+  openSheet(o=>{const s=o.st,a=asset(s.sym);return hd('Заявка на пополнение',{back:1})+
+  `<div class="box"><div class="br" style="margin:0"><span style="color:var(--mut);font-size:19px">Сумма</span><input id="tam" inputmode="decimal" placeholder="0" value="${esc(s.amt)}" style="font-size:28px;text-align:right" autocomplete="off"><button class="chip" data-a="tsym">${aicon(a,24)}${esc(s.sym)}</button></div></div>
+  <p class="note">Заявку рассмотрит администратор. После одобрения сумма появится на балансе.</p><button class="cta" id="tgo" data-a="tgo" disabled>Отправить заявку</button>`},
+  (sh,o)=>{const s=o.st,up=()=>{$('#tgo',sh).disabled=!(pa(s.amt)>0)};$('#tam',sh).oninput=e=>{s.amt=e.target.value;up()};up()},{sym:sym||'USDT',amt:''});
+}
+function sendMenu(){openSheet(()=>hd('Вывести')+opt('up','Отправить токены','На другой кошелёк','m_send')+(S.data.partners||[]).map(p=>opt('up','В '+esc(p.name),'Мгновенно на ваш аккаунт '+esc(p.name),'m_partner','data-p="'+esc(p.id)+'"')).join('')+opt('card','Продать на карту','Или другими способами — через поддержку','m_sell')+opt('swap','Обменивайте USDT на другие токены','Мгновенно внутри Keeper','m_usdt'))}
+function depositMenu(){openSheet(()=>hd('Пополнить')+opt('qr','Получить токены','Из другого кошелька — по адресу и QR','d_recv')+opt('card','Купить картой или P2P','Пополнение через поддержку','d_buy')+opt('card','Заявка на пополнение','Администратор зачислит после проверки','d_req')+opt('swap','Купить GRAM за другой токен','Обмен USDT и других активов','d_swap')+opt('down','Перевести стейблкоин','Отправьте USDT на свой адрес','d_usdt'))}
 function receiveSheet(sym){
   const addr=S.data.user.address,svg=A.qr(addr);
   openSheet(()=>hd('Получить '+(sym||''),{back:sheets.length>0})+(svg?`<div class="qr">${svg}</div>`:'')+`<p class="note">Отправляйте на этот адрес только токены Keeper (GRAM, USDT)</p><div class="mono">${esc(addr)}</div>
   <div style="display:flex;gap:10px;margin-top:12px"><button class="cta" data-a="copyaddr">Копировать</button><button class="cta sec" data-a="shareaddr">Поделиться</button></div>`);
 }
-function sendForm(sym){
-  openSheet(o=>{const s=o.st,a=asset(s.sym);return hd('Отправить '+esc(s.sym),{back:1})+
-  `<div class="field"><div><label>Адрес</label><input id="sto" placeholder="UQ…" value="${esc(s.to)}" autocomplete="off" autocapitalize="off" spellcheck="false"></div><button class="mini" data-a="spaste">Вставить</button></div>
+function sendForm(sym,pt){
+  openSheet(o=>{const s=o.st,a=asset(s.sym);return hd((s.pt?'В '+esc(pname(s.pt))+' · ':'Отправить ')+esc(s.sym),{back:1})+
+  `<div class="field"><div><label>${s.pt?'Логин в '+esc(pname(s.pt)):'Адрес'}</label><input id="sto" placeholder="${s.pt?'username':'UQ…'}" value="${esc(s.to)}" autocomplete="off" autocapitalize="off" spellcheck="false"></div><button class="mini" data-a="spaste">Вставить</button></div>
   <div class="box"><div class="br" style="margin:0"><span style="color:var(--mut);font-size:19px">Сумма</span><input id="sam" inputmode="decimal" placeholder="0" value="${esc(s.amt)}" style="font-size:28px;text-align:right" autocomplete="off"><button class="chip" data-a="spsym">${aicon(a,24)}${esc(s.sym)}${ic('upd')}</button></div></div>
   <div class="bl" style="margin:0 6px 12px"><span id="sus">$0 · Останется: ${num(balOf(s.sym))} ${esc(s.sym)}</span><a data-a="smax">МАКС</a></div>
   <div class="field"><div><label>Комментарий</label><input id="scm" maxlength="120" value="${esc(s.cm)}" autocomplete="off"></div></div>
-  <p class="note">Адреса Keeper — мгновенно. Внешние адреса обрабатываются администратором.</p><button class="cta" id="sgo" data-a="sgo">Продолжить</button>`},
-  (sh,o)=>{const s=o.st;const up=()=>{const a=pa(s.amt),b=balOf(s.sym),ok=a>0&&a<=b+1e-9&&s.to.trim().length>=20;
+  <p class="note">${s.pt?'Деньги поступят на аккаунт «'+esc(pname(s.pt))+'» с этим логином. Проверьте логин: отмена невозможна.':'Адреса Keeper — мгновенно. Внешние адреса обрабатываются администратором.'}</p><button class="cta" id="sgo" data-a="sgo">Продолжить</button>`},
+  (sh,o)=>{const s=o.st;const up=()=>{const a=pa(s.amt),b=balOf(s.sym),ok=a>0&&a<=b+1e-9&&s.to.trim().length>=(s.pt?3:20);
       $('#sus',sh).textContent='$'+usd(a*asset(s.sym).price)+' · Останется: '+num(Math.max(b-a,0))+' '+s.sym;$('#sgo',sh).disabled=!ok};
-    $('#sto',sh).oninput=e=>{s.to=e.target.value;up()};$('#sam',sh).oninput=e=>{s.amt=e.target.value;up()};$('#scm',sh).oninput=e=>{s.cm=e.target.value};up()},{sym,to:'',amt:'',cm:''});
+    $('#sto',sh).oninput=e=>{s.to=e.target.value;up()};$('#sam',sh).oninput=e=>{s.amt=e.target.value;up()};$('#scm',sh).oninput=e=>{s.cm=e.target.value};up()},{sym,to:'',amt:'',cm:'',pt:!!pt});
 }
 function confirmSheet(title,rows,okText,fn){
   openSheet(()=>hd(title,{back:1})+`<div class="card">${rows.map(r=>`<div class="item"><div class="t" style="color:var(--mut)">${r[0]}</div><div class="r" style="max-width:62%;word-break:break-all"><b style="font-size:16px">${esc(r[1])}</b></div></div>`).join('')}</div>
@@ -301,8 +314,8 @@ function assetSheet(sym){
   <div class="card"><div class="item"><div class="t"><b>Ваш баланс</b></div><div class="r"><b>${num(b)} ${esc(a.symbol)}</b><small>$${usd(b*a.price)}</small></div></div></div>
   <div style="display:flex;gap:10px;margin-top:14px"><button class="cta" data-a="abuy" data-s="${esc(sym)}">Купить</button><button class="cta sec" data-a="asell" data-s="${esc(sym)}">Продать</button></div>`);
 }
-const TT={send:'Отправлено',receive:'Получено',withdraw:'Вывод',swap:'Обмен',stake:'Стейкинг',unstake:'Вывод из стейкинга',admin_credit:'Пополнение',admin_debit:'Списание'};
-const PLUS={receive:1,admin_credit:1,unstake:1};
+const TT={send:'Отправлено',receive:'Получено',withdraw:'Вывод',swap:'Обмен',stake:'Стейкинг',unstake:'Вывод из стейкинга',admin_credit:'Пополнение',admin_debit:'Списание',partner_in:'Из другого приложения',partner_out:'В другое приложение'};
+const PLUS={receive:1,admin_credit:1,unstake:1,partner_in:1};
 async function historySheet(){
   const o=openSheet(o=>hd('История')+(o.st.items?(o.st.items.length?`<div class="card">${o.st.items.map(t=>{const sw=t.type==='swap',pl=PLUS[t.type];const am=sw?`<b>+${num(t.amount2)} ${esc(t.symbol2)}</b><small>−${num(t.amount)} ${esc(t.symbol)}</small>`:`<b class="${pl?'up':''}">${pl?'+':'−'}${num(t.amount)} ${esc(t.symbol)}</b>`;
   const stt=t.status==='pending'?'<span class="badge">В обработке</span>':t.status==='rejected'?'<span class="badge" style="background:rgba(255,90,115,.15);color:var(--rd)">Отклонено, возвращено</span>':'';
@@ -402,14 +415,17 @@ const ACT={
   abuy:t=>{popSheet();swapSheet(t.dataset.s==='USDT'?'GRAM':'USDT',t.dataset.s==='USDT'?'GRAM':t.dataset.s)},
   asell:t=>{popSheet();swapSheet(t.dataset.s,t.dataset.s==='USDT'?'GRAM':'USDT')},
   m_send:()=>pickAsset('Выберите актив',s=>sendForm(s),a=>a.section==='core'||balOf(a.symbol)>0),
+  m_partner:t=>{const pid=t.dataset.p;pickAsset('Выберите актив',s=>sendForm(s,pid),a=>a.symbol==='GRAM'||a.symbol==='USDT')},
   m_sell:()=>supportOpen(),m_usdt:()=>{popSheet();swapSheet('USDT','GRAM')},
-  d_recv:()=>receiveSheet(''),d_usdt:()=>receiveSheet('USDT'),d_buy:()=>supportOpen(),d_swap:()=>{popSheet();swapSheet('USDT','GRAM')},
+  d_recv:()=>receiveSheet(''),d_usdt:()=>receiveSheet('USDT'),d_buy:()=>supportOpen(),d_req:()=>pickAsset('Выберите актив',s=>topupForm(s),a=>a.section==='core'),
+  tsym:()=>{const o=sheets[sheets.length-1];pickAsset('Выберите актив',s=>{o.st.sym=s;paint(o)},a=>a.section==='core')},
+  tgo:async t=>{const s=sheets[sheets.length-1].st;t.disabled=true;try{await api('/api/topup',{symbol:s.sym,amount:String(pa(s.amt))});closeAll();toast('Заявка отправлена')}catch(e){toast(e.message);t.disabled=false}},d_swap:()=>{popSheet();swapSheet('USDT','GRAM')},
   pk:(t)=>{const o=sheets[sheets.length-1],f=o.st.onPick;popSheet();f&&f(t.dataset.s)},
   spaste:()=>{const o=sheets[sheets.length-1],v=(A.paste()||'').trim();if(!v)return toast('Буфер пуст');o.st.to=v;const i=$('#sto',o.sh);i.value=v;i.dispatchEvent(new Event('input'))},
   spsym:()=>{const o=sheets[sheets.length-1];pickAsset('Выберите актив',s=>{o.st.sym=s;o.st.amt='';paint(o)},a=>a.section==='core'||balOf(a.symbol)>0)},
   smax:()=>{const o=sheets[sheets.length-1];o.st.amt=fin(balOf(o.st.sym));const i=$('#sam',o.sh);i.value=o.st.amt;i.dispatchEvent(new Event('input'))},
-  sgo:()=>{const s=sheets[sheets.length-1].st;confirmSheet('Подтверждение',[['Получатель',s.to.trim()],['Сумма',num(pa(s.amt))+' '+s.sym],['Комментарий',s.cm||'—']],'Отправить',async()=>{
-      const r=await api('/api/send',{symbol:s.sym,amount:String(pa(s.amt)),to:s.to.trim(),comment:s.cm});closeAll();await refresh();render();toast(r.status==='pending'?'Заявка принята и ожидает обработки':'Отправлено')})},
+  sgo:()=>{const s=sheets[sheets.length-1].st;confirmSheet('Подтверждение',[['Получатель',(s.pt?pname(s.pt)+': ':'')+s.to.trim()],['Сумма',num(pa(s.amt))+' '+s.sym],['Комментарий',s.cm||'—']],'Отправить',async()=>{
+      const r=await api(s.pt?'/api/partner/send':'/api/send',{symbol:s.sym,amount:String(pa(s.amt)),to:s.to.trim(),comment:s.cm,partner:s.pt||undefined});closeAll();await refresh();render();toast(r.status==='pending'?(s.pt?'Перевод в обработке — '+pname(s.pt)+' пока не ответил':'Заявка принята и ожидает обработки'):'Отправлено')})},
   cok:async t=>{const o=sheets[sheets.length-1];t.disabled=true;t.innerHTML='<span class="spin"></span>';try{await o.st.fn()}catch(e){toast(e.message);t.disabled=false;t.textContent='Повторить'}},
   swmax:()=>{const o=sheets[sheets.length-1];o.st.amt=fin(balOf(o.st.from));$('#sa',o.sh).value=o.st.amt;quote(o)},
   swflip:()=>{const o=sheets[sheets.length-1],s=o.st;[s.from,s.to]=[s.to,s.from];s.amt='';paint(o)},
